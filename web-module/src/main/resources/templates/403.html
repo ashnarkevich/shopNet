@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome page</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/style::main_css-link"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<div>Welcome page</div>
+<div id="403">
+    <h1 class="text-center text-white pt-5">ACCESS DENIED</h1>
+    <div class="text-center text-white pt-5">
+        <h3>Sorry, you do not have permission to view this page.</h3>
+
+        Click <a th:href="@{/login}" class="btn btn-warning btn-sm" role="button" aria-pressed="true">here</a>
+        to LogIn.
+    </div>
+</div>
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>

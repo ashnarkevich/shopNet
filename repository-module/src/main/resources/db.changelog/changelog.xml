@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!--    part_1  -->
+    <!--    User table plus User-detail table  -->
+    <changeSet id="crateTable-user" author="petrikov05@gmail.com">
+        <createTable tableName="user">
+            <column name="id" type="BIGINT(11)" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true"/>
+            </column>
+            <column name="email" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(70)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-super_administrator" author="petrikov05@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="admin@shop.com"/>
+            <column name="role" value="ADMINISTRATOR"/>
+            <column name="password" value="$2y$12$eC2y/VZWJtXOsM5aE1GSqu0hdo5z2c7ntewVBwyvaqS0l2A09KON6"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="crateTable-user_details" author="petrikov05@gmail.com">
+        <createTable tableName="user_details">
+            <column name="user_id" type="BIGINT(11)">
+                <constraints foreignKeyName="user_id"
+                             references="user(id)"
+                             nullable="false"
+                             primaryKey="true"
+                             unique="true"/>
+            </column>
+            <column name="last_name" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patronymic" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="add-super_administrator_details" author="petrikov05@gmail.com">
+        <insert tableName="user_details">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'admin@shop.com')"/>
+            <column name="last_name" value="Admin"/>
+            <column name="first_name" value="Admin"/>
+            <column name="patronymic" value="Admin"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="petrikov05@gmail.com" id="addColumn-is_deleted-user">
+        <addColumn tableName="user">
+            <column name="is_deleted" type="TINYINT" defaultValue="0"/>
+        </addColumn>
+    </changeSet>
+
+    <!--    Review table -->
+    <changeSet id="crateTable-review" author="petrikov05@gmail.com">
+        <createTable tableName="review">
+            <column name="id" type="BIGINT(11)" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true"/>
+            </column>
+            <column name="text" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_create" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="BIGINT(11)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

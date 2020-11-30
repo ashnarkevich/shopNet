@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>meta-data page</title>
+</head>
+<body>
+
+<th:block th:fragment="link_main_page">
+    <a href="#" th:href="@{/}">main_page</a>
+</th:block>
+
+<th:block th:fragment="link_pagination">
+    <div th:if="${pages} > 1">
+        <a th:each="page : ${#numbers.sequence(1,pages)}" href="#" th:href="@{/users(page=${page})}" th:text="${page+' '}"> </a>
+    </div>
+</th:block>
+
+</body>
+</html>

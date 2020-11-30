@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <title>Welcome page</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/style::main_css-link"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<div>registration</div>
+
+<th:block th:insert="skeleton/link::link_main_page"></th:block>
+
+<th:block th:insert="skeleton/message :: message_warning">message</th:block>
+
+<form action="#" th:action="@{/users/add}" th:object="${user}" method="post">
+    <ul>
+        <li>
+            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">error</div>
+            <label>Last name:
+                <input type="text" name="lastName" th:value="*{lastName}">
+            </label>
+        </li>
+        <li>
+            <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">error</div>
+            <label>First name:
+                <input type="text" name="firstName" th:value="*{firstName}">
+            </label>
+        </li>
+        <li>
+            <div th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}">error</div>
+            <label> Patronymic:
+                <input type="text" name="patronymic" th:value="*{patronymic}">
+            </label>
+        </li>
+        <li>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">error</div>
+            <label>Email:
+                <input type="text" name="email" th:value="*{email}">
+            </label>
+        </li>
+        <li>
+            <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}">error</div>
+            <ul>
+                <li th:each="role : ${roles}">
+                    <input type="radio" th:field="*{role}" th:value="${role}"/>
+                    <label th:for="${#ids.prev('role')}" th:text="${role}">role not found</label>
+                </li>
+            </ul>
+            <input type="submit" value="add user">
+        </li>
+    </ul>
+</form>
+
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>
