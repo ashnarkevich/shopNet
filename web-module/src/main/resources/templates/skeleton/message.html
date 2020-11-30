@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>message page</title>
+</head>
+<body>
+<th:block th:fragment="message_warning">
+    <p th:if="${message} != null" th:text="${message}"></p>
+    <p th:if="${error} != null" th:text="${error}"></p>
+</th:block>
+</body>
+</html>

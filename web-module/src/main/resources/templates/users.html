@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <title>Users</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<h1>Users page</h1>
+
+<th:block th:insert="skeleton/link::link_main_page"></th:block>
+
+<th:block th:insert="skeleton/message :: message_warning">message</th:block>
+
+<!--<div sec:authorize="!isAuthenticated()">-->
+    <a th:href="@{/users/add}">add user</a>
+<!--</div>-->
+
+<div th:if="${not #lists.isEmpty(users)}">
+    <table>
+        <thead>
+        <th>id</th>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>active</th>
+        <th>delete</th>
+        <th>status</th>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}" th:object="${user}">
+            <td th:text="*{id}">id</td>
+            <td th:text="*{email}">email></td>
+            <td th:text="*{lastName + ' ' + firstName + ' ' + patronymic}">Name</td>
+            <td>
+                <form action="#" th:action="@{/users/{id}/updateRole(id=*{id})}" method="get"
+                      th:id="'form-update-' + *{id}">
+                    <input name="page" th:value="${page}" hidden>
+                    <label>
+                        <select name="role">
+                            <option th:each="role : ${T(com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum).values()}"
+                                    th:text="${role}"
+                                    th:selected="${role.equals(user.role)}">
+                                role
+                            </option>
+                        </select>
+                    </label>
+                    <button type="submit" th:form="'form-update-' + *{id}">update role</button>
+                </form>
+            </td>
+            <td><a href="#" th:href="@{/users/{id}/changePass(id=*{id},page=${page})}">change password</a></td>
+            <td><input type="checkbox" form="form-delete" th:value="*{id}" name="id"></td>
+            <td>
+                <span th:if="*{isDeleted}">deleted</span>
+                <span th:unless="*{isDeleted}">active</span>
+            </td>
+
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <form action="#" th:action="@{/users/delete(page=${page})}" method="post" id="form-delete">
+                    <button type="submit" form="form-delete">delete selection</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:unless="${not #lists.isEmpty(users)}">Users not found.</div>
+
+<th:block th:insert="skeleton/link :: link_pagination">pagination</th:block>
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>

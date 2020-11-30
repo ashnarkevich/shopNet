@@ -1,0 +1,15 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    color: brown;
+    padding: 20px;
+}
+div{
+    font-size: 24px;
+}
+a{
+    font-size: 18px;
+    text-decoration: none;
+}
