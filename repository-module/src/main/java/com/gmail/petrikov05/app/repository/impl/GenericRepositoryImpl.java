@@ -1,13 +1,15 @@
 package com.gmail.petrikov05.app.repository.impl;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import com.gmail.petrikov05.app.repository.GenericRepository;
+import com.gmail.petrikov05.app.repository.model.Article;
 
-public abstract class GenericRepositoryImpl<I, T> implements GenericRepository<I, T> {
+public abstract class GenericRepositoryImpl<L, T> implements GenericRepository<L, T> {
 
     protected Class<T> entityClass;
 
@@ -28,8 +30,9 @@ public abstract class GenericRepositoryImpl<I, T> implements GenericRepository<I
     }
 
     @Override
-    public void delete(T t) {
+    public boolean delete(T t) {
         entityManager.remove(t);
+        return true;
     }
 
     @Override
@@ -38,13 +41,21 @@ public abstract class GenericRepositoryImpl<I, T> implements GenericRepository<I
     }
 
     @Override
-    public void persist(T t) {
+    public void add(T t) {
         entityManager.persist(t);
     }
 
     @Override
-    public T getObjectByID(I i) {
-        return entityManager.find(entityClass, i);
+    public T getObjectByID(L id) {
+        return entityManager.find(entityClass, id);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Article> getAllObjects() {
+        String queryString = "FROM " + entityClass.getSimpleName() + " c";
+        Query query = entityManager.createQuery(queryString);
+        return (List<Article>) query.getResultList();
     }
 
 }

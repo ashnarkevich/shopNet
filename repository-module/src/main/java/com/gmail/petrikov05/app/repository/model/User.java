@@ -40,7 +40,7 @@ public class User {
 
     @OneToOne(mappedBy = "user",
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             orphanRemoval = false)
     private UserDetails userDetails;
 
@@ -48,6 +48,22 @@ public class User {
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Article> articles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            optional = false)
+    private UserInformation userInformation;
 
     public Long getId() {
         return id;
@@ -81,12 +97,12 @@ public class User {
         this.role = role;
     }
 
-    public Boolean getIsDeleted() {
+    public Boolean getDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(Boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
     public UserDetails getUserDetails() {
@@ -105,6 +121,30 @@ public class User {
         this.reviews = reviews;
     }
 
+    public List<Article> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<Article> articles) {
+        this.articles = articles;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public UserInformation getUserInformation() {
+        return userInformation;
+    }
+
+    public void setUserInformation(UserInformation userInformation) {
+        this.userInformation = userInformation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -114,18 +154,17 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password) &&
-                role == user.role &&
-                Objects.equals(isDeleted, user.isDeleted) &&
-                Objects.equals(userDetails, user.userDetails) &&
-                Objects.equals(reviews, user.reviews);
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password,
+                user.password) && role == user.role && Objects.equals(isDeleted, user.isDeleted) && Objects.equals(
+                userDetails,
+                user.userDetails) && Objects.equals(reviews, user.reviews) && Objects.equals(articles,
+                user.articles) && Objects.equals(comments, user.comments) && Objects.equals(userInformation,
+                user.userInformation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, role, isDeleted, userDetails, reviews);
+        return Objects.hash(id, email, password, role, isDeleted, userDetails, reviews, articles, comments, userInformation);
     }
 
 }

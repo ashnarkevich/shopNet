@@ -49,7 +49,7 @@
                     <button type="submit" th:form="'form-update-' + *{id}">update role</button>
                 </form>
             </td>
-            <td><a href="#" th:href="@{/users/{id}/changePass(id=*{id},page=${page})}">change password</a></td>
+            <td><a href="#" th:href="@{/users/{id}/updatePass(id=*{id},page=${page})}">change password</a></td>
             <td><input type="checkbox" form="form-delete" th:value="*{id}" name="id"></td>
             <td>
                 <span th:if="*{isDeleted}">deleted</span>

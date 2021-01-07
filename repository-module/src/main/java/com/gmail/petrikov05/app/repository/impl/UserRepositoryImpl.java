@@ -18,7 +18,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
 
     @Override
     public User getUserByEmail(String email) {
-        String queryString = "FROM " + entityClass.getSimpleName() + " u WHERE u.email = :email";
+        String queryString = "FROM " + entityClass.getSimpleName() + " u WHERE u.email = :email AND u.isDeleted = false";
         Query query = entityManager.createQuery(queryString);
         query.setParameter("email", email);
         try {

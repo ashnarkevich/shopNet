@@ -4,5 +4,7 @@ public interface PageConstant {
 
     int COUNT_OF_USER_BY_PAGE = 10;
     int COUNT_OF_REVIEW_BY_PAGE = 10;
+    int COUNT_OF_ARTICLE_BY_PAGE = 10;
+    int ARTICLE_SUMMARY_LENGTH = 200;
 
 }

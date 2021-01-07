@@ -8,14 +8,19 @@ import javax.transaction.Transactional;
 
 import com.gmail.petrikov05.app.repository.UserRepository;
 import com.gmail.petrikov05.app.repository.model.User;
+import com.gmail.petrikov05.app.repository.model.UserDetails;
+import com.gmail.petrikov05.app.repository.model.UserInformation;
 import com.gmail.petrikov05.app.repository.model.constant.UserRoleEnum;
 import com.gmail.petrikov05.app.service.UserService;
 import com.gmail.petrikov05.app.service.exception.AdministratorChangingException;
+import com.gmail.petrikov05.app.service.exception.AnonymousUserException;
 import com.gmail.petrikov05.app.service.exception.UserExistenceException;
 import com.gmail.petrikov05.app.service.model.PaginationWithEntitiesDTO;
 import com.gmail.petrikov05.app.service.model.user.AddUserDTO;
 import com.gmail.petrikov05.app.service.model.user.LoginUserDTO;
+import com.gmail.petrikov05.app.service.model.user.UpdateUserProfileDTO;
 import com.gmail.petrikov05.app.service.model.user.UserDTO;
+import com.gmail.petrikov05.app.service.model.user.UserProfileDTO;
 import com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum;
 import com.gmail.petrikov05.app.service.util.MailUtil;
 import com.gmail.petrikov05.app.service.util.PageUtil;
@@ -23,15 +28,18 @@ import com.gmail.petrikov05.app.service.util.PasswordUtil;
 import com.gmail.petrikov05.app.service.util.converter.UserConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.gmail.petrikov05.app.service.constant.MailMessage.MAIL_PASSWORD_MESSAGE;
 import static com.gmail.petrikov05.app.service.constant.MailMessage.MAIL_SUBJECT;
 import static com.gmail.petrikov05.app.service.constant.PageConstant.COUNT_OF_USER_BY_PAGE;
-import static com.gmail.petrikov05.app.service.constant.UserConstant.EMAIL_SUPER_ADMIN;
+import static com.gmail.petrikov05.app.service.constant.AdminUserConstant.EMAIL_SUPER_ADMIN;
 import static com.gmail.petrikov05.app.service.util.PageUtil.getStartPosition;
 import static com.gmail.petrikov05.app.service.util.converter.UserConverter.convertObjectToFullUserDTO;
+import static com.gmail.petrikov05.app.service.util.converter.UserConverter.convertObjectToUserProfileDTO;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -102,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO changePassword(Long id) throws UserExistenceException, AdministratorChangingException {
+    public UserDTO updatePassword(Long id) throws UserExistenceException, AdministratorChangingException {
         User user = userRepository.getUserById(id);
         checkUser(id, user);
         String newPassword = PasswordUtil.generatePassword();
@@ -125,10 +133,81 @@ public class UserServiceImpl implements UserService {
         String password = PasswordUtil.generatePassword();
         String cryptPassword = passwordEncoder.encode(password);
         addUser.setPassword(cryptPassword);
-        addUser.setIsDeleted(false);
-        userRepository.persist(addUser);
+        addUser.setDeleted(false);
+        userRepository.add(addUser);
         mailUtil.sendMessage(addUserDTO.getEmail(), MAIL_SUBJECT, MAIL_PASSWORD_MESSAGE + password);
         return convertObjectToFullUserDTO(addUser);
+    }
+
+    @Override
+    @Transactional
+    public UserProfileDTO getUserProfile() throws AnonymousUserException {
+        User user = getCurrentUser();
+        return convertObjectToUserProfileDTO(user);
+    }
+
+    @Override
+    @Transactional
+    public UserProfileDTO updateProfile(UpdateUserProfileDTO updateUserProfileDTO) throws AnonymousUserException {
+        User user = getCurrentUser();
+        updateUser(updateUserProfileDTO, user);
+        userRepository.merge(user);
+        return convertObjectToUserProfileDTO(user);
+    }
+
+    @Override
+    @Transactional
+    public UserProfileDTO changePassword(String newPassword) throws AnonymousUserException {
+        User user = getCurrentUser();
+        String cryptPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(cryptPassword);
+        userRepository.merge(user);
+        return convertObjectToUserProfileDTO(user);
+    }
+
+    @Override
+    public User getCurrentUser() throws AnonymousUserException {
+        String username = getCurrentUserName();
+        return userRepository.getUserByEmail(username);
+    }
+
+    private void updateUser(UpdateUserProfileDTO profileDTO, User user) {
+        UserDetails userDetails = user.getUserDetails();
+        if (!userDetails.getLastName().equals(profileDTO.getLastName())) {
+            userDetails.setLastName(profileDTO.getLastName());
+        }
+        if (!userDetails.getFirstName().equals(profileDTO.getFirstName())) {
+            userDetails.setFirstName(profileDTO.getFirstName());
+        }
+        if (!userDetails.getPatronymic().equals(profileDTO.getPatronymic())) {
+            userDetails.setPatronymic(profileDTO.getPatronymic());
+        }
+        user.setUserDetails(userDetails);
+        UserInformation userInformation = user.getUserInformation();
+        if (userInformation.getAddress() == null) {
+            userInformation.setAddress(profileDTO.getAddress());
+        } else {
+            if (!userInformation.getAddress().equals(profileDTO.getAddress())) {
+                userInformation.setAddress(profileDTO.getAddress());
+            }
+        }
+        if (userInformation.getPhone() == null) {
+            userInformation.setPhone(profileDTO.getPhone());
+        } else {
+            if (!userInformation.getPhone().equals(profileDTO.getPhone())) {
+                userInformation.setPhone(profileDTO.getPhone());
+            }
+        }
+        user.setUserInformation(userInformation);
+    }
+
+    private String getCurrentUserName() throws AnonymousUserException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        if (username.equals("ANONYMOUS")) {
+            throw new AnonymousUserException();
+        }
+        return username;
     }
 
     private void checkUser(Long id, User user) throws UserExistenceException, AdministratorChangingException {

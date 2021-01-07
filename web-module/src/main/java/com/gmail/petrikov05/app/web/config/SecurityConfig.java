@@ -1,7 +1,6 @@
 package com.gmail.petrikov05.app.web.config;
 
-import com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum;
-import com.gmail.petrikov05.app.web.security.LoginAccessDeniedHandler;
+import com.gmail.petrikov05.app.web.controller.security.LoginAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,6 +9,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+
+import static com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum.ADMINISTRATOR;
+import static com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum.CUSTOMER_USER;
+import static com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum.SECURE_API_USER;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -36,15 +39,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.httpBasic()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/users", "/reviews")
+                .hasRole(ADMINISTRATOR.name())
+                .antMatchers("/articles", "/profile")
+                .hasRole(CUSTOMER_USER.name())
+                .antMatchers("/api/*")
+                .hasRole(SECURE_API_USER.name())
                 .antMatchers("/")
                 .permitAll()
                 .antMatchers("/login")
                 .not().fullyAuthenticated()
-                .antMatchers("/users", "/reviews")
-                .hasRole(UserRoleDTOEnum.ADMINISTRATOR.name())
-                //                .antMatchers("/users/delete")
-                //                .hasRole(UserRoleDTOEnum.ADMINISTRATOR.name())
                 .and()
                 .formLogin()
                 .loginPage("/login")

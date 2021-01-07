@@ -12,21 +12,35 @@ public interface TestConstant {
     String VALID_EMAIL_SUPER_ADMIN = "admin@shop.com";
     String VALID_EMAIL = "Test@test.test";
     String VALID_USER_ROLE = "ADMINISTRATOR";
-    Long VALID_USER_ID = 5L;
     String VALID_PASSWORD = "password";
-    Boolean VALID_IS_DELETED = true;
+    String VALID_ADDRESS = "Minsk, st.Esenina 23 - 23";
+    String VALID_PHONE = "+123 12 1234567";
+    Long VALID_USER_ID = 5L;
 
     int VALID_PAGE = 2;
     int VALID_PAGES = 2;
-    Long VALID_COUNT_OF_ENTITIES = 18L;
     int VALID_OBJECT_BY_PAGE = 10;
     int VALID_START_POSITION = getStartPosition(VALID_PAGE, VALID_OBJECT_BY_PAGE);
+    Long VALID_ID = 1L;
+    Long VALID_COUNT_OF_ENTITIES = 18L;
+    Boolean VALID_IS_DELETED = true;
+    LocalDateTime VALID_DATE =
+            LocalDateTime.of(2020, 10, 15, 12, 59, 41);
+    String VALID_AUTHOR = VALID_LAST_NAME + " " + VALID_FIRST_NAME;
 
     String VALID_REVIEW_TEXT = "test review content";
-    Long VALID_REVIEW_ID = 1L;
-    String VALID_REVIEW_AUTHOR = VALID_LAST_NAME + " " + VALID_FIRST_NAME;
     Boolean VALID_REVIEW_IS_ACTIVE = true;
     LocalDateTime VALID_REVIEW_DATE_CREATE =
             LocalDateTime.of(2002, 8, 05, 12, 59, 41);
 
+    String VALID_ARTICLE_TEXT = "test article text";
+    String VALID_ARTICLE_TITLE = "test title";
+
+    Long VALID_COMMENT_ID = 35L;
+    LocalDateTime VALID_COMMENT_DATE =
+            LocalDateTime.of(2020, 8, 05, 12, 59, 41);
+    String VALID_COMMENT_TEXT = "This is a comment text";
+    String VALID_COMMENT_LAST_NAME = "TestAuthor";
+    String VALID_COMMENT_FIRST_NAME = "authorTest";
+    String VALID_COMMENT_AUTHOR =  VALID_COMMENT_LAST_NAME + " " + VALID_COMMENT_FIRST_NAME;
 }

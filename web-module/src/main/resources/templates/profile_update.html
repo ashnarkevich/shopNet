@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>profile</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/style::main_css-link"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<div>update user profile</div>
+
+<div th:insert="skeleton/link :: link_main_page"></div>
+<div th:insert="skeleton/message :: message_warning"></div>
+
+<div>
+    <form th:action="@{/profile/update}" method="post" th:object="${user}">
+        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">error</div>
+        <label>last name:
+            <input type="text" name="lastName" th:value="*{lastName}">
+        </label>
+        <br/>
+        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">error</div>
+        <label>first name:
+            <input type="text" name="firstName" th:value="*{firstName}">
+        </label>
+        <br/>
+        <div th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}">error</div>
+        <label>patronymic:
+            <input type="text" name="patronymic" th:value="*{patronymic}">
+        </label>
+        <br/>
+        <label>address:
+            <input type="text" name="address" th:value="*{address}">
+        </label>
+        <br/>
+        <label>phone:
+            <input type="text" name="phone" th:value="*{phone}">
+        </label>
+        <br/>
+        <input type="submit" value="update profile">
+    </form>
+
+</div>
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>
