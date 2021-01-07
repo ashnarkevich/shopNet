@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>profile change</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/style::main_css-link"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<div>change password</div>
+
+<div th:insert="skeleton/link :: link_main_page"></div>
+<div th:insert="skeleton/message :: message_warning"></div>
+
+<div>
+    <form th:action="@{/profile/changePass}" method="post" th:object="${password}">
+        <div th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}">error</div>
+        <label>new password:
+            <input type="password" name="newPassword">
+        </label>
+        <br/>
+        <div th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">error</div>
+        <label>confirm password:
+            <input type="password" name="confirmPassword">
+        </label>
+        <br/>
+        <input type="submit" value="change password">
+    </form>
+
+</div>
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>

@@ -8,14 +8,18 @@ import java.util.stream.LongStream;
 import com.gmail.petrikov05.app.repository.UserRepository;
 import com.gmail.petrikov05.app.repository.model.User;
 import com.gmail.petrikov05.app.repository.model.UserDetails;
+import com.gmail.petrikov05.app.repository.model.UserInformation;
 import com.gmail.petrikov05.app.repository.model.constant.UserRoleEnum;
 import com.gmail.petrikov05.app.service.exception.AdministratorChangingException;
+import com.gmail.petrikov05.app.service.exception.AnonymousUserException;
 import com.gmail.petrikov05.app.service.exception.UserExistenceException;
 import com.gmail.petrikov05.app.service.impl.UserServiceImpl;
 import com.gmail.petrikov05.app.service.model.PaginationWithEntitiesDTO;
 import com.gmail.petrikov05.app.service.model.user.AddUserDTO;
 import com.gmail.petrikov05.app.service.model.user.LoginUserDTO;
+import com.gmail.petrikov05.app.service.model.user.UpdateUserProfileDTO;
 import com.gmail.petrikov05.app.service.model.user.UserDTO;
+import com.gmail.petrikov05.app.service.model.user.UserProfileDTO;
 import com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum;
 import com.gmail.petrikov05.app.service.util.MailUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +27,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 
+import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_ADDRESS;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_COUNT_OF_ENTITIES;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_EMAIL;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_EMAIL_SUPER_ADMIN;
@@ -36,6 +45,7 @@ import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_PAGE;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_PAGES;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_PASSWORD;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_PATRONYMIC;
+import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_PHONE;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_START_POSITION;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_USER_ID;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_USER_ROLE;
@@ -47,6 +57,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -122,7 +133,7 @@ class UserServiceTest {
         assertThat(actualUserDTOSByPage.getEntities().get(0).getPatronymic())
                 .isEqualTo(returnedUsers.get(0).getUserDetails().getPatronymic());
         assertThat(actualUserDTOSByPage.getEntities().get(0).getIsDeleted())
-                .isEqualTo(returnedUsers.get(0).getIsDeleted());
+                .isEqualTo(returnedUsers.get(0).getDeleted());
         assertThat(actualUserDTOSByPage.getEntities().get(0).getRole().name())
                 .isEqualTo(returnedUsers.get(0).getRole().name());
         assertThat(actualUserDTOSByPage.getPages()).isEqualTo(VALID_PAGES);
@@ -229,7 +240,7 @@ class UserServiceTest {
     void changePassword_returnUserDTO() throws UserExistenceException, AdministratorChangingException {
         User returnedUser = getValidUser();
         when(userRepository.getUserById(VALID_USER_ID)).thenReturn(returnedUser);
-        UserDTO actualUserDTO = userService.changePassword(VALID_USER_ID);
+        UserDTO actualUserDTO = userService.updatePassword(VALID_USER_ID);
         assertThat(actualUserDTO).isNotNull();
         assertThat(actualUserDTO.getEmail()).isEqualTo(VALID_EMAIL);
     }
@@ -238,7 +249,7 @@ class UserServiceTest {
     void changePassword_callBusinessLogic() throws UserExistenceException, AdministratorChangingException {
         User returnedUser = getValidUser();
         when(userRepository.getUserById(anyLong())).thenReturn(returnedUser);
-        UserDTO actualUserDTO = userService.changePassword(VALID_USER_ID);
+        UserDTO actualUserDTO = userService.updatePassword(VALID_USER_ID);
         verify(userRepository, times(1)).getUserById(VALID_USER_ID);
         verify(userRepository, times(1)).merge(returnedUser);
         verify(mailUtil, times(1)).sendMessage(anyString(), anyString(), anyString());
@@ -248,10 +259,10 @@ class UserServiceTest {
     void changePasswordNotExistUser_returnUserExistenceException() throws UserExistenceException {
         when(userRepository.getUserById(anyLong())).thenReturn(null);
         assertThatExceptionOfType(UserExistenceException.class)
-                .isThrownBy(() -> userService.changePassword(VALID_USER_ID));
+                .isThrownBy(() -> userService.updatePassword(VALID_USER_ID));
         assertThrows(
                 UserExistenceException.class,
-                () -> userService.changePassword(VALID_USER_ID),
+                () -> userService.updatePassword(VALID_USER_ID),
                 "user not found");
     }
 
@@ -261,10 +272,10 @@ class UserServiceTest {
         returnedUser.setEmail(VALID_EMAIL_SUPER_ADMIN);
         when(userRepository.getUserById(anyLong())).thenReturn(returnedUser);
         assertThatExceptionOfType(AdministratorChangingException.class)
-                .isThrownBy(() -> userService.changePassword(anyLong()));
+                .isThrownBy(() -> userService.updatePassword(anyLong()));
         assertThrows(
                 AdministratorChangingException.class,
-                () -> userService.changePassword(anyLong()),
+                () -> userService.updatePassword(anyLong()),
                 "attempt to update super administrator"
         );
     }
@@ -287,7 +298,7 @@ class UserServiceTest {
         AddUserDTO addUserDTO = getAddUserDTO();
         userService.addUser(addUserDTO);
         verify(userRepository, times(1)).getUserByEmail(any());
-        verify(userRepository, times(1)).persist(any());
+        verify(userRepository, times(1)).add(any());
     }
 
     @Test
@@ -302,6 +313,156 @@ class UserServiceTest {
                 () -> userService.addUser(addUserDTO),
                 "user exist"
         );
+    }
+
+    /* get user profile */
+    @Test
+    void getUserProfile_returnUserProfile() throws AnonymousUserException {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        Authentication authentication = mock(Authentication.class);
+        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(VALID_EMAIL);
+        User returnedUser = getValidUser();
+        when(userRepository.getUserByEmail(anyString())).thenReturn(returnedUser);
+        UserProfileDTO actualUserProfile = userService.getUserProfile();
+        assertThat(actualUserProfile).isNotNull();
+        assertThat(actualUserProfile.getLastName()).isEqualTo(VALID_LAST_NAME);
+        assertThat(actualUserProfile.getFirstName()).isEqualTo(VALID_FIRST_NAME);
+        assertThat(actualUserProfile.getPatronymic()).isEqualTo(VALID_PATRONYMIC);
+        assertThat(actualUserProfile.getAddress()).isEqualTo(VALID_ADDRESS);
+        assertThat(actualUserProfile.getPhone()).isEqualTo(VALID_PHONE);
+    }
+
+    @Test
+    void getUserProfile_callLogic() throws AnonymousUserException {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        Authentication authentication = mock(Authentication.class);
+        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(VALID_EMAIL);
+        User returnedUser = getValidUser();
+        when(userRepository.getUserByEmail(anyString())).thenReturn(returnedUser);
+        userService.getUserProfile();
+        verify(userRepository, times(1)).getUserByEmail(any());
+    }
+
+    @Test
+    void getProfile_returnAnonymousUserException() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        Authentication authentication = mock(Authentication.class);
+        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("ANONYMOUS");
+        assertThatExceptionOfType(AnonymousUserException.class)
+                .isThrownBy(() -> userService.getUserProfile());
+        assertThrows(
+                AnonymousUserException.class,
+                () -> userService.getUserProfile()
+        );
+    }
+
+    /* update user profile */
+    @Test
+    void updateProfile_returnProfile() throws AnonymousUserException {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        Authentication authentication = mock(Authentication.class);
+        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(VALID_EMAIL);
+        UpdateUserProfileDTO updateUserProfileDTO = getValidUpdateUserProfileDTO();
+        User returnedUser = getValidUser();
+        when(userRepository.getUserByEmail(anyString())).thenReturn(returnedUser);
+        UserProfileDTO actualUser = userService.updateProfile(updateUserProfileDTO);
+        assertThat(actualUser).isNotNull();
+    }
+
+    @Test
+    void updateProfile_callLogic() throws AnonymousUserException {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        Authentication authentication = mock(Authentication.class);
+        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(VALID_EMAIL);
+        UpdateUserProfileDTO updateUserProfileDTO = getValidUpdateUserProfileDTO();
+        User returnedUser = getValidUser();
+        when(userRepository.getUserByEmail(VALID_EMAIL)).thenReturn(returnedUser);
+        userService.updateProfile(updateUserProfileDTO);
+        verify(SecurityContextHolder.getContext(), times(1)).getAuthentication();
+        verify(userRepository, times(1)).getUserByEmail(anyString());
+    }
+
+    /* change password user profile */
+    @Test
+    void changePassword_returnUserProfileDTO() throws AnonymousUserException {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        Authentication authentication = mock(Authentication.class);
+        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(VALID_EMAIL);
+        User returnedUser = getValidUser();
+        when(userRepository.getUserByEmail(VALID_EMAIL)).thenReturn(returnedUser);
+        UserProfileDTO actualUser = userService.changePassword(VALID_PASSWORD);
+        verify(userRepository, times(1)).getUserByEmail(anyString());
+        assertThat(actualUser).isNotNull();
+        //        assertThat(actualUser).;
+    }
+
+    @Test
+    void changePassword_returnAnonymousUserException() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        Authentication authentication = mock(Authentication.class);
+        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("ANONYMOUS");
+        assertThatExceptionOfType(AnonymousUserException.class)
+                .isThrownBy(() -> userService.getUserProfile());
+        assertThrows(
+                AnonymousUserException.class,
+                () -> userService.getUserProfile()
+        );
+    }
+
+    /* get current user */
+    @Test
+    void getCurrentUser_returnValidUser() throws AnonymousUserException {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        Authentication authentication = mock(Authentication.class);
+        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(VALID_EMAIL);
+        User returnedUser = getValidUser();
+        when(userRepository.getUserByEmail(any())).thenReturn(returnedUser);
+        User actualUser = userService.getCurrentUser();
+        verify(userRepository, times(1)).getUserByEmail(any());
+        assertThat(actualUser).isNotNull();
+        assertThat(actualUser.getEmail()).isEqualTo(VALID_EMAIL);
+        assertThat(actualUser.getRole()).isEqualByComparingTo(UserRoleEnum.ADMINISTRATOR);
+    }
+
+    @Test
+    void getCurrentUser_returnAnonymousUserException() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        Authentication authentication = mock(Authentication.class);
+        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("ANONYMOUS");
+        assertThatExceptionOfType(AnonymousUserException.class)
+                .isThrownBy(() -> userService.getUserProfile());
+        assertThrows(
+                AnonymousUserException.class,
+                () -> userService.getUserProfile()
+        );
+    }
+
+    private UpdateUserProfileDTO getValidUpdateUserProfileDTO() {
+        UpdateUserProfileDTO updateUserProfileDTO = new UpdateUserProfileDTO();
+        updateUserProfileDTO.setLastName(VALID_LAST_NAME + "upd");
+        updateUserProfileDTO.setFirstName(VALID_FIRST_NAME + "upd");
+        updateUserProfileDTO.setPatronymic(VALID_PATRONYMIC + "upd");
+        updateUserProfileDTO.setAddress(VALID_ADDRESS + "upd");
+        updateUserProfileDTO.setPhone(VALID_PHONE + "upd");
+        return updateUserProfileDTO;
     }
 
     private AddUserDTO getAddUserDTO() {
@@ -331,13 +492,25 @@ class UserServiceTest {
         user.setEmail(VALID_EMAIL);
         user.setRole(UserRoleEnum.valueOf(VALID_USER_ROLE));
         user.setPassword(VALID_PASSWORD);
-        user.setIsDeleted(VALID_IS_DELETED);
+        user.setDeleted(VALID_IS_DELETED);
+        user.setUserDetails(getValidUserDetails());
+        user.setUserInformation(getValidUserInformation());
+        return user;
+    }
+
+    private UserInformation getValidUserInformation() {
+        UserInformation userInformation = new UserInformation();
+        userInformation.setAddress(VALID_ADDRESS);
+        userInformation.setPhone(VALID_PHONE);
+        return userInformation;
+    }
+
+    private UserDetails getValidUserDetails() {
         UserDetails userDetails = new UserDetails();
         userDetails.setLastName(VALID_LAST_NAME);
         userDetails.setFirstName(VALID_FIRST_NAME);
         userDetails.setPatronymic(VALID_PATRONYMIC);
-        user.setUserDetails(userDetails);
-        return user;
+        return userDetails;
     }
 
 }

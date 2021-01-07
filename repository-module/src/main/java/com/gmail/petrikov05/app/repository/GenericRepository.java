@@ -1,15 +1,21 @@
 package com.gmail.petrikov05.app.repository;
 
-public interface GenericRepository<I, T> {
+import java.util.List;
+
+import com.gmail.petrikov05.app.repository.model.Article;
+
+public interface GenericRepository<L, T> {
 
     Long getCountOfEntities();
 
-    void delete(T t);
+    boolean delete(T t);
 
     void merge(T t);
 
-    void persist(T t);
+    void add(T t);
 
-    T getObjectByID(I id);
+    T getObjectByID(L id);
+
+    List<Article> getAllObjects();
 
 }

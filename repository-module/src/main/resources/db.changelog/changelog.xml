@@ -93,4 +93,67 @@
         </createTable>
     </changeSet>
 
+    <!-- part2 -->
+    <!-- add table article -->
+    <changeSet id="createTable-article" author="petrikov05@gmail.com">
+        <createTable tableName="article">
+            <column name="id" type="BIGINT(11)" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true"/>
+            </column>
+            <column name="title" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="BIGINT(11)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- add table comment -->
+    <changeSet id="addTable-comment" author="petrikov05@gmail.com">
+        <createTable tableName="comment">
+            <column name="id" type="BIGINT(11)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="article_id" type="BIGINT(11)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="BIGINT(11)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- add table user information -->
+    <changeSet id="addTable-user_information" author="petrikov05@gmail.com">
+        <createTable tableName="user_information">
+            <column name="user_id" type="BIGINT(11)">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="address" type="VARCHAR(155)"/>
+            <column name="phone" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="add-user_information" author="petrikov05@gmail.com">
+        <insert tableName="user_information">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'admin@shop.com')"/>
+            <!--            <column name="address" value="minsk"/>-->
+            <!--            <column name="phone" value="+375 29 2929292"/>-->
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

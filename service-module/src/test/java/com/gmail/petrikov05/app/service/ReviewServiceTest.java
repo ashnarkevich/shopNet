@@ -24,9 +24,9 @@ import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_FIRST
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_LAST_NAME;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_OBJECT_BY_PAGE;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_PAGE;
-import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_REVIEW_AUTHOR;
+import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_AUTHOR;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_REVIEW_DATE_CREATE;
-import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_REVIEW_ID;
+import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_ID;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_REVIEW_IS_ACTIVE;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_REVIEW_TEXT;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_START_POSITION;
@@ -58,9 +58,9 @@ class ReviewServiceTest {
                 .thenReturn(returnedReviews);
         PaginationWithEntitiesDTO<ReviewDTO> actualReviewsByPage = reviewService.getReviewsByPage(VALID_PAGE);
         assertThat(actualReviewsByPage).isNotNull();
-        assertThat(actualReviewsByPage.getEntities().get(0).getId()).isEqualTo(VALID_REVIEW_ID);
+        assertThat(actualReviewsByPage.getEntities().get(0).getId()).isEqualTo(VALID_ID);
         assertThat(actualReviewsByPage.getEntities().get(0).getText()).isEqualTo(VALID_REVIEW_TEXT);
-        assertThat(actualReviewsByPage.getEntities().get(0).getAuthor()).isEqualTo(VALID_REVIEW_AUTHOR);
+        assertThat(actualReviewsByPage.getEntities().get(0).getAuthor()).isEqualTo(VALID_AUTHOR);
         assertThat(actualReviewsByPage.getEntities().get(0).getDateCreate())
                 .isEqualTo(VALID_REVIEW_DATE_CREATE);
         assertThat(actualReviewsByPage.getEntities().get(0).getIsActive())
@@ -94,8 +94,8 @@ class ReviewServiceTest {
         List<Long> ids = getValidIds(1);
         List<ReviewDTO> actualReviewsDTO = reviewService.deletedReviews(ids);
         assertThat(actualReviewsDTO).isNotEmpty();
-        assertThat(actualReviewsDTO.get(0).getId()).isEqualTo(VALID_REVIEW_ID);
-        assertThat(actualReviewsDTO.get(0).getAuthor()).isEqualTo(VALID_REVIEW_AUTHOR);
+        assertThat(actualReviewsDTO.get(0).getId()).isEqualTo(VALID_ID);
+        assertThat(actualReviewsDTO.get(0).getAuthor()).isEqualTo(VALID_AUTHOR);
         assertThat(actualReviewsDTO.get(0).getText()).isEqualTo(VALID_REVIEW_TEXT);
         assertThat(actualReviewsDTO.get(0).getDateCreate()).isEqualTo(VALID_REVIEW_DATE_CREATE);
         assertThat(actualReviewsDTO.get(0).getIsActive()).isEqualTo(VALID_REVIEW_IS_ACTIVE);
@@ -135,7 +135,7 @@ class ReviewServiceTest {
 
     private Review getValidReview() {
         Review review = new Review();
-        review.setId(VALID_REVIEW_ID);
+        review.setId(VALID_ID);
         review.setText(VALID_REVIEW_TEXT);
         review.setDateCreate(VALID_REVIEW_DATE_CREATE);
         review.setIsActive(VALID_REVIEW_IS_ACTIVE);

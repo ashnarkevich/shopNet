@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <title>articles</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<h1>Articles page</h1>
+
+<th:block th:insert="skeleton/link::link_main_page"></th:block>
+
+<th:block th:insert="skeleton/message :: message_warning">message</th:block>
+
+<div th:if="${not #lists.isEmpty(articles)}">
+    <ul th:each="article : ${articles}" th:object="${article}">
+        <li th:text="*{id}"></li>
+        <li th:text="*{title}"></li>
+        <li th:text="*{date}"></li>
+        <li th:text="*{author}"></li>
+        <li>
+            <span th:text="*{text}"></span>
+            <a th:href="@{/articles/{id}(id=*{id})}">more</a>
+        </li>
+    </ul>
+</div>
+<div th:unless="${not #lists.isEmpty(articles)}">Articles not found.</div>
+
+<th:block th:insert="skeleton/link :: link_pagination">pagination</th:block>
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>

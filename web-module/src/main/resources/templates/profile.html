@@ -9,15 +9,21 @@
 <body>
 <div>user profile</div>
 
+<div th:insert="skeleton/link :: link_main_page"></div>
+<div th:insert="skeleton/message :: message_warning"></div>
+
 <div>
-    <table >
-        <tr>
-            <td>Last name</td>
-<!--            <td th:text="*{lastName}"></td>-->
-        </tr>
-    </table>
-    <ul th:object="${user}">
-    </ul>
+    <div th:object="${user}">
+        <p>id: <span th:text="*{id}">id not found</span></p>
+        <p>last name: <span th:text="*{lastName}">last name not found</span></p>
+        <p>first name: <span th:text="*{firstName}">first name not found</span></p>
+        <p>patronymic: <span th:text="*{patronymic}">patronymic not found</span></p>
+        <p>address: <span th:text="*{address}">address not found</span></p>
+        <p>phone: <span th:text="*{phone}">phone not found</span></p>
+        <a th:href="@{/profile/update}">change profile</a>
+        <br/>
+        <a th:href="@{/profile/changePass}">change password</a>
+    </div>
 </div>
 
 <th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
