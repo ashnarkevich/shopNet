@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>articles</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<h1>Items page</h1>
+
+<th:block th:insert="skeleton/link::link_main_page"></th:block>
+
+<th:block th:insert="skeleton/message :: message_warning">message</th:block>
+
+<div th:if="${not #lists.isEmpty(items)}">
+    <table>
+        <thead>
+        <th>name</th>
+        <th>number</th>
+        <th>price</th>
+        <th>active</th>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}" th:object="${item}">
+            <td th:text="*{name}"></td>
+            <td th:text="*{number}"></td>
+            <td th:text="*{price}"></td>
+            <td>
+                <a th:href="@{/items/{number}(number=*{number})}">view</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:unless="${not #lists.isEmpty(items)}">Items not found.</div>
+
+<!--<th:block th:insert="skeleton/link :: link_items_pagination">pagination</th:block>-->
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>
