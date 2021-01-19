@@ -336,10 +336,8 @@ class ArticleControllerTest {
     }
 
     private PaginationWithEntitiesDTO<ArticleDTO> getValidArticlesWithPagination() {
-        PaginationWithEntitiesDTO<ArticleDTO> articlesWithPagination = new PaginationWithEntitiesDTO<>();
-        articlesWithPagination.setPages(VALID_PAGES);
-        articlesWithPagination.setEntities(getValidArticles());
-        return articlesWithPagination;
+        List<ArticleDTO> articleDTOS = getValidArticles();
+        return new PaginationWithEntitiesDTO<>(articleDTOS, VALID_PAGES);
     }
 
     private List<ArticleDTO> getValidArticles() {

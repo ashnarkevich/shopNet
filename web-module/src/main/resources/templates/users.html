@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+>
 <head>
     <title>Users</title>
     <th:block th:insert="skeleton/meta::head_meta"></th:block>
@@ -13,9 +13,7 @@
 
 <th:block th:insert="skeleton/message :: message_warning">message</th:block>
 
-<!--<div sec:authorize="!isAuthenticated()">-->
-    <a th:href="@{/users/add}">add user</a>
-<!--</div>-->
+<a th:href="@{/users/add}">add user</a>
 
 <div th:if="${not #lists.isEmpty(users)}">
     <table>
@@ -74,7 +72,7 @@
 </div>
 <div th:unless="${not #lists.isEmpty(users)}">Users not found.</div>
 
-<th:block th:insert="skeleton/link :: link_pagination">pagination</th:block>
+<th:block th:insert="skeleton/link :: link_user_pagination">pagination</th:block>
 
 <th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
 </body>

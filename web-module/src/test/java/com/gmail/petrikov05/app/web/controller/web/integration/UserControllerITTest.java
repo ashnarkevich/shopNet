@@ -11,11 +11,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum.CUSTOMER_USER;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_EMAIL;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_FIRST_NAME;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_LAST_NAME;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_FIRST_NAME;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_LAST_NAME;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PAGE;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PATRONYMIC;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ROLE;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_PATRONYMIC;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_ROLE;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -100,11 +100,11 @@ class UserControllerITTest {
     public void addUser_redirectUsers() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
                         .param("email", "notexistuser@mail.com")
-                        .param("role", VALID_ROLE)
+                        .param("role", VALID_USER_ROLE)
         ).andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/users"))
                 .andExpect(flash().attribute(

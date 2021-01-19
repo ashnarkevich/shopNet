@@ -9,8 +9,11 @@ import com.gmail.petrikov05.app.repository.ReviewRepository;
 import com.gmail.petrikov05.app.repository.model.Review;
 import com.gmail.petrikov05.app.repository.model.User;
 import com.gmail.petrikov05.app.repository.model.UserDetails;
+import com.gmail.petrikov05.app.service.constant.MessageConstant;
+import com.gmail.petrikov05.app.service.exception.AnonymousUserException;
 import com.gmail.petrikov05.app.service.impl.ReviewServiceImpl;
 import com.gmail.petrikov05.app.service.model.PaginationWithEntitiesDTO;
+import com.gmail.petrikov05.app.service.model.review.AddReviewDTO;
 import com.gmail.petrikov05.app.service.model.review.ReviewDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.gmail.petrikov05.app.service.constant.MessageConstant.MESSAGE_ACCESS_CLOSE;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_COUNT_OF_ENTITIES;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_FIRST_NAME;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_LAST_NAME;
@@ -31,6 +35,8 @@ import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_REVIE
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_REVIEW_TEXT;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_START_POSITION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
@@ -43,10 +49,12 @@ class ReviewServiceTest {
     private ReviewService reviewService;
     @Mock
     private ReviewRepository reviewRepository;
+    @Mock
+    private UserService userService;
 
     @BeforeEach
     public void setup() {
-        this.reviewService = new ReviewServiceImpl(reviewRepository);
+        this.reviewService = new ReviewServiceImpl(reviewRepository, userService);
     }
 
     /* get user by page */
@@ -119,6 +127,43 @@ class ReviewServiceTest {
         reviewService.deletedReviews(ids);
         verify(reviewRepository, times(4)).getObjectByID(anyLong());
         verify(reviewRepository, times(4)).delete(any(Review.class));
+    }
+
+    /* add review */
+    @Test
+    void addReview_returnAddedReview() throws AnonymousUserException {
+        AddReviewDTO addReviewDTO = getValidAddReviewDTO();
+        User returnedUser = getValidUser();
+        when(userService.getCurrentUser()).thenReturn(returnedUser);
+        Review returnedReview = getValidReview();
+        when(reviewRepository.add(any())).thenReturn(returnedReview);
+        ReviewDTO actualResult = reviewService.addReview(addReviewDTO);
+        verify(userService, times(1)).getCurrentUser();
+        verify(reviewRepository, times(1)).add(any());
+        assertThat(actualResult).isNotNull();
+        assertThat(actualResult.getId()).isEqualTo(VALID_ID);
+        assertThat(actualResult.getAuthor()).isEqualTo(VALID_AUTHOR);
+        assertThat(actualResult.getDateCreate()).isEqualTo(VALID_REVIEW_DATE_CREATE);
+        assertThat(actualResult.getText()).isEqualTo(VALID_REVIEW_TEXT);
+    }
+
+    @Test
+    void addReviewWithAnonymousUser_returnAnonymousUserException() throws AnonymousUserException {
+        AddReviewDTO addReviewDTO = getValidAddReviewDTO();
+        when(userService.getCurrentUser()).thenThrow(new AnonymousUserException());
+        assertThatExceptionOfType(AnonymousUserException.class)
+                .isThrownBy(() -> reviewService.addReview(addReviewDTO));
+        assertThrows(
+                AnonymousUserException.class,
+                () -> reviewService.addReview(addReviewDTO),
+                MESSAGE_ACCESS_CLOSE
+        );
+    }
+
+    private AddReviewDTO getValidAddReviewDTO() {
+        AddReviewDTO review = new AddReviewDTO();
+        review.setText(VALID_REVIEW_TEXT);
+        return review;
     }
 
     private List<Long> getValidIds(int length) {

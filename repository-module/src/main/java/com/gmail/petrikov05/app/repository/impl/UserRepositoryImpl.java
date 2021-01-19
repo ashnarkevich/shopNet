@@ -22,9 +22,9 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
         Query query = entityManager.createQuery(queryString);
         query.setParameter("email", email);
         try {
-            Object user = query.getSingleResult();
-            return (User) user;
+            return (User) query.getSingleResult();
         } catch (NoResultException e) {
+            logger.info("user with email = " + email + " not found");
             return null;
         }
     }

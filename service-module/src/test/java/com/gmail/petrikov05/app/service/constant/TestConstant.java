@@ -1,5 +1,6 @@
 package com.gmail.petrikov05.app.service.constant;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static com.gmail.petrikov05.app.service.util.PageUtil.getStartPosition;
@@ -43,4 +44,16 @@ public interface TestConstant {
     String VALID_COMMENT_LAST_NAME = "TestAuthor";
     String VALID_COMMENT_FIRST_NAME = "authorTest";
     String VALID_COMMENT_AUTHOR =  VALID_COMMENT_LAST_NAME + " " + VALID_COMMENT_FIRST_NAME;
+
+    Long VALID_ORDER_ID = 2L;
+    String VALID_ORDER_NUMBER = "1-2021";
+    String VALID_ORDER_STATUS = "IN_PROGRESS";
+    LocalDateTime VALID_ORDER_DATE_CREATE = LocalDateTime.of(2020,6,28,23,45,46);
+
+    String VALID_ITEM_NAME = "testItemName";
+    String VALID_ITEM_NUMBER = "asd2341";
+    int VALID_ITEM_AMOUNT = 36;
+    BigDecimal VALID_ITEM_PRICE = BigDecimal.valueOf(4.11);
+    BigDecimal VALID_TOTAL_PRICE = BigDecimal.valueOf(1234.23);
+
 }

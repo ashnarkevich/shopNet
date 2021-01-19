@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import static com.gmail.petrikov05.app.service.constant.TextMessage.USER_WITH_USERNAME_NOT_FOUND;
+import static com.gmail.petrikov05.app.service.constant.MessageConstant.MESSAGE_USER_WITH_USERNAME_NOT_FOUND;
 
 @Service
 public class AppUserDetailsService implements UserDetailsService {
@@ -27,7 +27,7 @@ public class AppUserDetailsService implements UserDetailsService {
         LoginUserDTO user = userService.getUserByEmail(username);
         if (user == null) {
             logger.info("user equals null");
-            throw new UsernameNotFoundException(USER_WITH_USERNAME_NOT_FOUND);
+            throw new UsernameNotFoundException(MESSAGE_USER_WITH_USERNAME_NOT_FOUND);
         }
         return new AppUser(user);
     }

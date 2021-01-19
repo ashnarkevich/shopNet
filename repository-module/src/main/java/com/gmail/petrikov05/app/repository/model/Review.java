@@ -10,6 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Generated;
 
 @Entity
 @Table(name = "review")
@@ -21,9 +27,11 @@ public class Review {
     private Long id;
     @Column
     private String text;
-    @Column(name = "date_create")
+    @Column(name = "date_create", insertable = false)
+    @CreationTimestamp
     private LocalDateTime dateCreate;
-    @Column(name = "is_active")
+    @Column(name = "is_active", insertable = false)
+    @ColumnDefault(value = "false")
     private Boolean isActive;
     @ManyToOne
     @JoinColumn(name = "author_id")

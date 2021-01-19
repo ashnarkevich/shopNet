@@ -10,12 +10,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PAGE;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_AUTHOR;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PAGE;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_REVIEW_TEXT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,6 +54,16 @@ class ReviewControllerITTest {
                         .param("page", String.valueOf(VALID_PAGE))
         ).andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/reviews?page=" + VALID_PAGE));
+    }
+
+    @Test
+    @WithMockUser(username = "best@best.com", roles = "SALE_USER")
+    public void addReview_returnStatusOk() throws Exception {
+        mockMvc.perform(
+                post("/reviews/add")
+                        .param("text", VALID_REVIEW_TEXT)
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute("message", "BestLastName BestFirstName Your review was send."));
     }
 
 }

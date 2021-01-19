@@ -50,17 +50,14 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public PaginationWithEntitiesDTO<ArticleDTO> getArticlesByPage(Integer page) {
-        int pages = getPages();
         int startPosition = PageUtil.getStartPosition(page, COUNT_OF_ARTICLE_BY_PAGE);
         List<Article> articles = articleRepository.getArticlesByPage(startPosition, COUNT_OF_ARTICLE_BY_PAGE);
-        List<ArticleDTO> articleWithCommentsDTOS = articles.stream()
+        List<ArticleDTO> articleDTOS = articles.stream()
                 .map(ArticleConverter::convertObjectToDTO)
                 .map(this::correctTextLengthForSummary)
                 .collect(Collectors.toList());
-        PaginationWithEntitiesDTO<ArticleDTO> articlesWithPage = new PaginationWithEntitiesDTO<>();
-        articlesWithPage.setEntities(articleWithCommentsDTOS);
-        articlesWithPage.setPages(pages);
-        return articlesWithPage;
+        int pages = getPages();
+        return new PaginationWithEntitiesDTO<>(articleDTOS, pages);
     }
 
     @Override

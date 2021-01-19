@@ -36,7 +36,8 @@ import org.springframework.stereotype.Service;
 import static com.gmail.petrikov05.app.service.constant.MailMessage.MAIL_PASSWORD_MESSAGE;
 import static com.gmail.petrikov05.app.service.constant.MailMessage.MAIL_SUBJECT;
 import static com.gmail.petrikov05.app.service.constant.PageConstant.COUNT_OF_USER_BY_PAGE;
-import static com.gmail.petrikov05.app.service.constant.AdminUserConstant.EMAIL_SUPER_ADMIN;
+import static com.gmail.petrikov05.app.service.constant.UserConstant.EMAIL_SUPER_ADMIN;
+import static com.gmail.petrikov05.app.service.constant.UserConstant.USER_ANONYMOUS;
 import static com.gmail.petrikov05.app.service.util.PageUtil.getStartPosition;
 import static com.gmail.petrikov05.app.service.util.converter.UserConverter.convertObjectToFullUserDTO;
 import static com.gmail.petrikov05.app.service.util.converter.UserConverter.convertObjectToUserProfileDTO;
@@ -78,11 +79,8 @@ public class UserServiceImpl implements UserService {
         List<UserDTO> userDTOS = users.stream()
                 .map(UserConverter::convertObjectToFullUserDTO)
                 .collect(Collectors.toList());
-        PaginationWithEntitiesDTO<UserDTO> paginationWithEntitiesDTO = new PaginationWithEntitiesDTO<>();
-        paginationWithEntitiesDTO.setEntities(userDTOS);
         int pages = getPages();
-        paginationWithEntitiesDTO.setPages(pages);
-        return paginationWithEntitiesDTO;
+        return new PaginationWithEntitiesDTO<>(userDTOS, pages);
     }
 
     @Override
@@ -166,6 +164,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User getCurrentUser() throws AnonymousUserException {
         String username = getCurrentUserName();
         return userRepository.getUserByEmail(username);
@@ -204,7 +203,8 @@ public class UserServiceImpl implements UserService {
     private String getCurrentUserName() throws AnonymousUserException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        if (username.equals("ANONYMOUS")) {
+        if (username.equals(USER_ANONYMOUS)) {
+            logger.info("try get with anonymous");
             throw new AnonymousUserException();
         }
         return username;

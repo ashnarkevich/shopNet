@@ -30,14 +30,14 @@ import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_FIEL
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_PASSWORD_UPDATE_FAIL;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_USER_NOT_FOUND;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_EMAIL;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_FIRST_NAME;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ID;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_IS_DELETED;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_LAST_NAME;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PAGE;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PAGES;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PATRONYMIC;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ROLE;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_FIRST_NAME;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_LAST_NAME;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_PATRONYMIC;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_ROLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -153,7 +153,7 @@ class UserControllerTest {
                         .contentType(MediaType.TEXT_HTML)
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_ROLE);
+        assertThat(actualResult).contains(VALID_USER_ROLE);
     }
 
     @Test
@@ -165,7 +165,7 @@ class UserControllerTest {
                         .contentType(MediaType.TEXT_HTML)
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_LAST_NAME);
+        assertThat(actualResult).contains(VALID_USER_LAST_NAME);
     }
 
     @Test
@@ -177,7 +177,7 @@ class UserControllerTest {
                         .contentType(MediaType.TEXT_HTML)
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_FIRST_NAME);
+        assertThat(actualResult).contains(VALID_USER_FIRST_NAME);
     }
 
     @Test
@@ -189,7 +189,7 @@ class UserControllerTest {
                         .contentType(MediaType.TEXT_HTML)
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_PATRONYMIC);
+        assertThat(actualResult).contains(VALID_USER_PATRONYMIC);
     }
 
     @Test
@@ -455,7 +455,7 @@ class UserControllerTest {
                 get("/users/add")
         ).andReturn();
         String actualContent = mvcResult.getResponse().getContentAsString();
-        assertThat(actualContent).contains(VALID_ROLE);
+        assertThat(actualContent).contains(VALID_USER_ROLE);
         assertThat(actualContent).contains("role1");
     }
 
@@ -467,11 +467,11 @@ class UserControllerTest {
         mockMvc.perform(
                 post("/users/add")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
                         .param("email", VALID_EMAIL)
-                        .param("role", VALID_ROLE)
+                        .param("role", VALID_USER_ROLE)
         ).andExpect(status().is3xxRedirection());
     }
 
@@ -519,7 +519,7 @@ class UserControllerTest {
     public void addUserWithEmptyFirstName_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
                         .param("firstName", "")
         ).andExpect(status().isOk());
     }
@@ -528,7 +528,7 @@ class UserControllerTest {
     public void addUserWithSmallFirstName_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
                         .param("firstName", getStringLength(1))
         ).andExpect(status().isOk());
     }
@@ -537,7 +537,7 @@ class UserControllerTest {
     public void addUserWithBigFirstName_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
                         .param("firstName", getStringLength(21))
         ).andExpect(status().isOk());
     }
@@ -546,7 +546,7 @@ class UserControllerTest {
     public void addUserWithInvalidFirstName_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
                         .param("firstName", "wer2w")
         ).andExpect(status().isOk());
     }
@@ -555,8 +555,8 @@ class UserControllerTest {
     public void addUserWithEmptyPatronymic_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
                         .param("patronymic", "")
         ).andExpect(status().isOk());
     }
@@ -565,8 +565,8 @@ class UserControllerTest {
     public void addUserWithSmallPatronymic_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
                         .param("patronymic", getStringLength(1))
         ).andExpect(status().isOk());
     }
@@ -575,8 +575,8 @@ class UserControllerTest {
     public void addUserWithBigPatronymic_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
                         .param("patronymic", getStringLength(41))
         ).andExpect(status().isOk());
     }
@@ -585,8 +585,8 @@ class UserControllerTest {
     public void addUserWithInvalidPatronymic_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
                         .param("patronymic", "we3we")
         ).andExpect(status().isOk());
     }
@@ -595,9 +595,9 @@ class UserControllerTest {
     public void addUserWithEmptyEmail_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
                         .param("email", "")
         ).andExpect(status().isOk());
     }
@@ -606,9 +606,9 @@ class UserControllerTest {
     public void addUserWithBigEmail_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
                         .param("email", getStringLength(51))
         ).andExpect(status().isOk());
     }
@@ -617,9 +617,9 @@ class UserControllerTest {
     public void addUserWithInvalidEmail_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
                         .param("email", getStringLength(35))
         ).andExpect(status().isOk());
     }
@@ -628,9 +628,9 @@ class UserControllerTest {
     public void addUserWithEmptyRole_returnStatusOk() throws Exception {
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
                         .param("email", VALID_EMAIL)
         ).andExpect(status().isOk());
     }
@@ -645,11 +645,11 @@ class UserControllerTest {
         }
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
                         .param("email", VALID_EMAIL)
-                        .param("role", VALID_ROLE)
+                        .param("role", VALID_USER_ROLE)
         ).andExpect(status().is3xxRedirection());
         try {
             verify(userService, times(1)).addUser(any());
@@ -664,11 +664,11 @@ class UserControllerTest {
         when(userService.addUser(any())).thenReturn(returnedUser);
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
                         .param("email", VALID_EMAIL)
-                        .param("role", VALID_ROLE)
+                        .param("role", VALID_USER_ROLE)
         ).andExpect(status().is3xxRedirection())
                 .andExpect(flash().attribute("message", "User with email (" + VALID_EMAIL + ") added"));
     }
@@ -678,22 +678,22 @@ class UserControllerTest {
         when(userService.addUser(any())).thenThrow(new UserExistenceException("user with this email exists"));
         mockMvc.perform(
                 post("/users/add")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
                         .param("email", VALID_EMAIL)
-                        .param("role", VALID_ROLE)
+                        .param("role", VALID_USER_ROLE)
         ).andExpect(status().isOk())
                 .andExpect(model().attribute("error", "user with email (" + VALID_EMAIL + ") exists"));
     }
 
     private AddUserDTO getValidAddUserDTO() {
         AddUserDTO addUserDTO = new AddUserDTO();
-        addUserDTO.setLastName(VALID_LAST_NAME);
-        addUserDTO.setFirstName(VALID_FIRST_NAME);
-        addUserDTO.setPatronymic(VALID_PATRONYMIC);
+        addUserDTO.setLastName(VALID_USER_LAST_NAME);
+        addUserDTO.setFirstName(VALID_USER_FIRST_NAME);
+        addUserDTO.setPatronymic(VALID_USER_PATRONYMIC);
         addUserDTO.setEmail(VALID_EMAIL);
-        addUserDTO.setRole(UserRoleDTOEnum.valueOf(VALID_ROLE));
+        addUserDTO.setRole(UserRoleDTOEnum.valueOf(VALID_USER_ROLE));
         return addUserDTO;
     }
 
@@ -711,11 +711,8 @@ class UserControllerTest {
     }
 
     private PaginationWithEntitiesDTO<UserDTO> getValidPaginationWithEntitiesDTO() {
-        PaginationWithEntitiesDTO<UserDTO> paginationWithEntitiesDTO = new PaginationWithEntitiesDTO<>();
         List<UserDTO> userDTOS = getValidUserDTOS();
-        paginationWithEntitiesDTO.setEntities(userDTOS);
-        paginationWithEntitiesDTO.setPages(VALID_PAGES);
-        return paginationWithEntitiesDTO;
+        return new PaginationWithEntitiesDTO<>(userDTOS, VALID_PAGES);
     }
 
     private List<UserDTO> getValidUserDTOS() {
@@ -729,10 +726,10 @@ class UserControllerTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(VALID_ID);
         userDTO.setEmail(VALID_EMAIL);
-        userDTO.setRole(UserRoleDTOEnum.valueOf(VALID_ROLE));
-        userDTO.setLastName(VALID_LAST_NAME);
-        userDTO.setFirstName(VALID_FIRST_NAME);
-        userDTO.setPatronymic(VALID_PATRONYMIC);
+        userDTO.setRole(UserRoleDTOEnum.valueOf(VALID_USER_ROLE));
+        userDTO.setLastName(VALID_USER_LAST_NAME);
+        userDTO.setFirstName(VALID_USER_FIRST_NAME);
+        userDTO.setPatronymic(VALID_USER_PATRONYMIC);
         userDTO.setIsDeleted(VALID_IS_DELETED);
         return userDTO;
     }

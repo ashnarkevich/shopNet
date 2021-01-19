@@ -11,5 +11,9 @@ public interface MessageConstant {
     String MESSAGE_USER_NOT_FOUND = "User not found.";
     String MESSAGE_PASSWORD_UPDATE_FAIL = "A password didn't change.";
     String MESSAGE_CHANGE_DIFFERENT_PASSWORD_FAIL = "Passwords do not match.";
+    String MESSAGE_ACCESS_CLOSE = "You do not have access.";
+
+    String MESSAGE_ORDER_NOT_FOUND = "The order is non existent.";
+    String MESSAGE_ORDER_UPDATED = "The order updated.";
 
 }

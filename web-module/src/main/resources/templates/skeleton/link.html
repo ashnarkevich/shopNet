@@ -9,7 +9,26 @@
     <a href="#" th:href="@{/}">main_page</a>
 </th:block>
 
-<th:block th:fragment="link_pagination">
+<th:block th:fragment="link_article_pagination">
+    <div th:if="${pages} > 1">
+        <a th:each="page : ${#numbers.sequence(1,pages)}" href="#" th:href="@{/articles(page=${page})}" th:text="${page+' '}"> </a>
+    </div>
+</th:block>
+<th:block th:fragment="link_items_pagination">
+    <div th:if="${pages} > 1">
+        <a th:each="page : ${#numbers.sequence(1,pages)}" href="#" th:href="@{/items(page=${page})}" th:text="${page+' '}"> </a>
+    </div>
+</th:block>
+<th:block th:fragment="link_order_pagination">
+    <div th:if="${pages} > 1">
+        <a th:each="page : ${#numbers.sequence(1,pages)}" href="#" th:href="@{/orders(page=${page})}" th:text="${page+' '}"> </a>
+    </div>
+</th:block>
+<th:block th:fragment="link_review_pagination">
+    <div th:if="${pages} > 1">
+        <a th:each="page : ${#numbers.sequence(1,pages)}" href="#" th:href="@{/reviews(page=${page})}" th:text="${page+' '}"> </a>
+    </div>
+</th:block><th:block th:fragment="link_user_pagination">
     <div th:if="${pages} > 1">
         <a th:each="page : ${#numbers.sequence(1,pages)}" href="#" th:href="@{/users(page=${page})}" th:text="${page+' '}"> </a>
     </div>

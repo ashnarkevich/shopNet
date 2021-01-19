@@ -7,16 +7,13 @@ public class PaginationWithEntitiesDTO<T> {
     private List<T> entities;
     private int pages;
 
-    public void setEntities(List<T> entities) {
+    public PaginationWithEntitiesDTO(List<T> entities, int pages) {
         this.entities = entities;
+        this.pages = pages;
     }
 
     public List<T> getEntities() {
         return entities;
-    }
-
-    public void setPages(int pages) {
-        this.pages = pages;
     }
 
     public int getPages() {

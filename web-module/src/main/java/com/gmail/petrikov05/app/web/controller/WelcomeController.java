@@ -12,6 +12,12 @@ public class WelcomeController {
 
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
+    @GetMapping
+    public String getWelcomePage() {
+        logger.info("show index page");
+        return "index";
+    }
+
     @GetMapping("/")
     public String getIndexPage() {
         logger.info("show index page");

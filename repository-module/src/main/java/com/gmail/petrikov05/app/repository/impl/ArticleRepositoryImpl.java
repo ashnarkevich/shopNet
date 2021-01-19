@@ -14,7 +14,7 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
     @Override
     @SuppressWarnings("unchecked")
     public List<Article> getArticlesByPage(int startPosition, int countOfArticleByPage) {
-        String queryStr = "FROM " + entityClass.getName() + " a ORDER BY a.date desc";
+        String queryStr = "FROM " + entityClass.getSimpleName() + " a ORDER BY a.date desc";
         Query query = entityManager.createQuery(queryStr);
         query.setFirstResult(startPosition);
         query.setMaxResults(countOfArticleByPage);

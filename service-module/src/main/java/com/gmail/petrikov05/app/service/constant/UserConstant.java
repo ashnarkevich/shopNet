@@ -1,7 +1,8 @@
 package com.gmail.petrikov05.app.service.constant;
 
-public interface AdminUserConstant {
+public interface UserConstant {
 
     String EMAIL_SUPER_ADMIN = "admin@shop.com";
 
+    String USER_ANONYMOUS = "anonymousUser";
 }

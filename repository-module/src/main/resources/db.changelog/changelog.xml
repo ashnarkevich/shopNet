@@ -81,10 +81,10 @@
             <column name="text" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="date_create" type="DATETIME">
+            <column name="date_create" type="DATETIME" defaultValueDate="NOW()">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_active" type="TINYINT">
+            <column name="is_active" type="TINYINT" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
             <column name="author_id" type="BIGINT(11)">
@@ -148,12 +148,66 @@
             <column name="phone" type="VARCHAR(20)"/>
         </createTable>
     </changeSet>
+
     <changeSet id="add-user_information" author="petrikov05@gmail.com">
         <insert tableName="user_information">
             <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'admin@shop.com')"/>
-            <!--            <column name="address" value="minsk"/>-->
-            <!--            <column name="phone" value="+375 29 2929292"/>-->
         </insert>
+    </changeSet>
+
+    <!--    part 3 -->
+    <!--    add table order -->
+    <changeSet id="crateTable-order" author="petrikov05@gmail.com">
+        <createTable tableName="orders">
+            <column name="id" type="BIGINT(11)" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true"/>
+            </column>
+            <column name="number" type="varchar(50)">
+                <constraints nullable="false"
+                             unique="true"/>
+            </column>
+            <column name="status" type="varchar(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_price" type="DECIMAL(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_create" type="DATETIME" defaultValueDate="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="BIGINT(11)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="BIGINT(11)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_amount" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- add table item -->
+    <changeSet id="crateTable-item" author="petrikov05@gmail.com">
+        <createTable tableName="item">
+            <column name="id" type="BIGINT(11)" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="number" type="VARCHAR(50)">
+                <constraints nullable="false"
+                             unique="true"/>
+            </column>
+            <column name="price" type="DECIMAL(5,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>

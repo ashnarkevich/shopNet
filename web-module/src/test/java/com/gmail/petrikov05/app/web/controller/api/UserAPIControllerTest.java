@@ -28,11 +28,11 @@ import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSA
 import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_SIZE_MAX_EMAIL;
 import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_SIZE_PATRONYMIC;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_EMAIL;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_FIRST_NAME;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_FIRST_NAME;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ID;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_LAST_NAME;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PATRONYMIC;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ROLE;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_LAST_NAME;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_PATRONYMIC;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_ROLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -289,10 +289,10 @@ class UserAPIControllerTest {
         UserDTO user = new UserDTO();
         user.setId(VALID_ID);
         user.setEmail(VALID_EMAIL);
-        user.setLastName(VALID_LAST_NAME);
-        user.setFirstName(VALID_FIRST_NAME);
-        user.setPatronymic(VALID_PATRONYMIC);
-        user.setRole(UserRoleDTOEnum.valueOf(VALID_ROLE));
+        user.setLastName(VALID_USER_LAST_NAME);
+        user.setFirstName(VALID_USER_FIRST_NAME);
+        user.setPatronymic(VALID_USER_PATRONYMIC);
+        user.setRole(UserRoleDTOEnum.valueOf(VALID_USER_ROLE));
         return user;
     }
 
@@ -305,10 +305,10 @@ class UserAPIControllerTest {
     private AddUserDTO getValidAddUserDTO() {
         AddUserDTO addUserDTO = new AddUserDTO();
         addUserDTO.setEmail(VALID_EMAIL);
-        addUserDTO.setRole(UserRoleDTOEnum.valueOf(VALID_ROLE));
-        addUserDTO.setLastName(VALID_LAST_NAME);
-        addUserDTO.setFirstName(VALID_FIRST_NAME);
-        addUserDTO.setPatronymic(VALID_PATRONYMIC);
+        addUserDTO.setRole(UserRoleDTOEnum.valueOf(VALID_USER_ROLE));
+        addUserDTO.setLastName(VALID_USER_LAST_NAME);
+        addUserDTO.setFirstName(VALID_USER_FIRST_NAME);
+        addUserDTO.setPatronymic(VALID_USER_PATRONYMIC);
         return addUserDTO;
     }
 

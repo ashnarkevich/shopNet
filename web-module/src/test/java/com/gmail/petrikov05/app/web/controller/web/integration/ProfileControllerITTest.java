@@ -9,12 +9,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ADDRESS;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_FIRST_NAME;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_LAST_NAME;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_ADDRESS;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_FIRST_NAME;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_LAST_NAME;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PASSWORD;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PATRONYMIC;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PHONE;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_PATRONYMIC;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_PHONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,62 +24,59 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource("/application-integration.properties")
+@WithMockUser(roles = "CUSTOMER_USER", username = "test@test.test")
 class ProfileControllerITTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(roles = "CUSTOMER_USER", username = "test@test.test")
     public void getUserProfile_returnUser() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                 get("/profile")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_LAST_NAME);
-        assertThat(actualResult).contains(VALID_FIRST_NAME);
-        assertThat(actualResult).contains(VALID_PATRONYMIC);
-        assertThat(actualResult).contains(VALID_ADDRESS);
-        assertThat(actualResult).contains(VALID_PHONE);
+        assertThat(actualResult).contains(VALID_USER_LAST_NAME);
+        assertThat(actualResult).contains(VALID_USER_FIRST_NAME);
+        assertThat(actualResult).contains(VALID_USER_PATRONYMIC);
+        assertThat(actualResult).contains(VALID_USER_ADDRESS);
+        assertThat(actualResult).contains(VALID_USER_PHONE);
     }
 
     @Test
-    @WithMockUser(roles = "CUSTOMER_USER", username = "test@test.test")
     public void showUpdateProfilePage() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                 get("/profile/update")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_LAST_NAME);
-        assertThat(actualResult).contains(VALID_FIRST_NAME);
-        assertThat(actualResult).contains(VALID_PATRONYMIC);
-        assertThat(actualResult).contains(VALID_ADDRESS);
-        assertThat(actualResult).contains(VALID_PHONE);
+        assertThat(actualResult).contains(VALID_USER_LAST_NAME);
+        assertThat(actualResult).contains(VALID_USER_FIRST_NAME);
+        assertThat(actualResult).contains(VALID_USER_PATRONYMIC);
+        assertThat(actualResult).contains(VALID_USER_ADDRESS);
+        assertThat(actualResult).contains(VALID_USER_PHONE);
     }
 
     @Test
-    @WithMockUser(roles = "CUSTOMER_USER", username = "test@test.test")
     public void updateProfile() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                 post("/profile/update")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
-                        .param("address", VALID_ADDRESS)
-                        .param("phone", VALID_PHONE)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
+                        .param("address", VALID_USER_ADDRESS)
+                        .param("phone", VALID_USER_PHONE)
         ).andExpect(status().isOk())
                 .andExpect(view().name("profile"))
                 .andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_LAST_NAME);
-        assertThat(actualResult).contains(VALID_FIRST_NAME);
-        assertThat(actualResult).contains(VALID_PATRONYMIC);
-        assertThat(actualResult).contains(VALID_ADDRESS);
-        assertThat(actualResult).contains(VALID_PHONE);
+        assertThat(actualResult).contains(VALID_USER_LAST_NAME);
+        assertThat(actualResult).contains(VALID_USER_FIRST_NAME);
+        assertThat(actualResult).contains(VALID_USER_PATRONYMIC);
+        assertThat(actualResult).contains(VALID_USER_ADDRESS);
+        assertThat(actualResult).contains(VALID_USER_PHONE);
     }
 
     @Test
-    @WithMockUser(roles = "CUSTOMER_USER", username = "test@test.test")
     public void getChangeProfilePasswordPage() throws Exception {
         mockMvc.perform(
                 get("/profile/changePass")
@@ -88,7 +85,6 @@ class ProfileControllerITTest {
     }
 
     @Test
-    @WithMockUser(roles = "CUSTOMER_USER", username = "test@test.test")
     public void changePasswordUserProfile() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                 post("/profile/changePass")
@@ -97,11 +93,11 @@ class ProfileControllerITTest {
         ).andExpect(status().isOk())
                 .andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_LAST_NAME);
-        assertThat(actualResult).contains(VALID_FIRST_NAME);
-        assertThat(actualResult).contains(VALID_PATRONYMIC);
-        assertThat(actualResult).contains(VALID_ADDRESS);
-        assertThat(actualResult).contains(VALID_PHONE);
+        assertThat(actualResult).contains(VALID_USER_LAST_NAME);
+        assertThat(actualResult).contains(VALID_USER_FIRST_NAME);
+        assertThat(actualResult).contains(VALID_USER_PATRONYMIC);
+        assertThat(actualResult).contains(VALID_USER_ADDRESS);
+        assertThat(actualResult).contains(VALID_USER_PHONE);
     }
 
 }
