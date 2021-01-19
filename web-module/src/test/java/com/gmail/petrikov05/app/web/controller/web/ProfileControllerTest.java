@@ -22,13 +22,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_CHANGE_DIFFERENT_PASSWORD_FAIL;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ADDRESS;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_FIRST_NAME;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_ADDRESS;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_FIRST_NAME;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ID;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_LAST_NAME;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_LAST_NAME;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PASSWORD;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PATRONYMIC;
-import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_PHONE;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_PATRONYMIC;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_USER_PHONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -105,7 +105,7 @@ class ProfileControllerTest {
                 get("/profile")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_LAST_NAME);
+        assertThat(actualResult).contains(VALID_USER_LAST_NAME);
     }
 
     @Test
@@ -116,7 +116,7 @@ class ProfileControllerTest {
                 get("/profile")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_FIRST_NAME);
+        assertThat(actualResult).contains(VALID_USER_FIRST_NAME);
     }
 
     @Test
@@ -127,7 +127,7 @@ class ProfileControllerTest {
                 get("/profile")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_PATRONYMIC);
+        assertThat(actualResult).contains(VALID_USER_PATRONYMIC);
     }
 
     @Test
@@ -138,7 +138,7 @@ class ProfileControllerTest {
                 get("/profile")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_ADDRESS);
+        assertThat(actualResult).contains(VALID_USER_ADDRESS);
     }
 
     @Test
@@ -149,7 +149,7 @@ class ProfileControllerTest {
                 get("/profile")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_PHONE);
+        assertThat(actualResult).contains(VALID_USER_PHONE);
     }
 
     @Test
@@ -212,7 +212,7 @@ class ProfileControllerTest {
                 get("/profile/update")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_LAST_NAME);
+        assertThat(actualResult).contains(VALID_USER_LAST_NAME);
     }
 
     @Test
@@ -223,7 +223,7 @@ class ProfileControllerTest {
                 get("/profile/update")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_FIRST_NAME);
+        assertThat(actualResult).contains(VALID_USER_FIRST_NAME);
     }
 
     @Test
@@ -234,7 +234,7 @@ class ProfileControllerTest {
                 get("/profile/update")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_PATRONYMIC);
+        assertThat(actualResult).contains(VALID_USER_PATRONYMIC);
     }
 
     @Test
@@ -245,7 +245,7 @@ class ProfileControllerTest {
                 get("/profile/update")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_ADDRESS);
+        assertThat(actualResult).contains(VALID_USER_ADDRESS);
     }
 
     @Test
@@ -256,7 +256,7 @@ class ProfileControllerTest {
                 get("/profile/update")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_PHONE);
+        assertThat(actualResult).contains(VALID_USER_PHONE);
     }
 
     @Test
@@ -277,9 +277,9 @@ class ProfileControllerTest {
         mockMvc.perform(
                 post("/profile/update")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
         ).andExpect(status().isOk())
                 .andExpect(view().name("profile"));
     }
@@ -324,7 +324,7 @@ class ProfileControllerTest {
         mockMvc.perform(
                 post("/profile/update")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("lastName", VALID_LAST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
                         .param("firstName", "")
         ).andExpect(status().isOk())
                 .andExpect(view().name("profile_update"));
@@ -335,7 +335,7 @@ class ProfileControllerTest {
         mockMvc.perform(
                 post("/profile/update")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("lastName", VALID_LAST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
                         .param("firstName", "1d2d3")
         ).andExpect(status().isOk())
                 .andExpect(view().name("profile_update"));
@@ -346,7 +346,7 @@ class ProfileControllerTest {
         mockMvc.perform(
                 post("/profile/update")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("lastName", VALID_LAST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
                         .param("firstName", getValidStringByLength(1))
         ).andExpect(status().isOk())
                 .andExpect(view().name("profile_update"));
@@ -357,7 +357,7 @@ class ProfileControllerTest {
         mockMvc.perform(
                 post("/profile/update")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("lastName", VALID_LAST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
                         .param("firstName", getValidStringByLength(21))
         ).andExpect(status().isOk())
                 .andExpect(view().name("profile_update"));
@@ -368,7 +368,7 @@ class ProfileControllerTest {
         mockMvc.perform(
                 post("/profile/update")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("lastName", VALID_LAST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
                         .param("firstName", getValidStringByLength(21))
                         .param("patronymic", "")
         ).andExpect(status().isOk())
@@ -380,8 +380,8 @@ class ProfileControllerTest {
         mockMvc.perform(
                 post("/profile/update")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
                         .param("patronymic", getValidStringByLength(1))
         ).andExpect(status().isOk())
                 .andExpect(view().name("profile_update"));
@@ -392,8 +392,8 @@ class ProfileControllerTest {
         mockMvc.perform(
                 post("/profile/update")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
                         .param("patronymic", "1m1m1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("profile_update"));
@@ -404,8 +404,8 @@ class ProfileControllerTest {
         mockMvc.perform(
                 post("/profile/update")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
                         .param("patronymic", getValidStringByLength(41))
         ).andExpect(status().isOk())
                 .andExpect(view().name("profile_update"));
@@ -417,9 +417,9 @@ class ProfileControllerTest {
         when(userService.updateProfile(any())).thenReturn(returnedUser);
         mockMvc.perform(
                 post("/profile/update")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
         ).andExpect(status().isOk())
                 .andExpect(view().name("profile"));
         Mockito.verify(userService, times(1)).updateProfile(any());
@@ -431,9 +431,9 @@ class ProfileControllerTest {
         when(userService.updateProfile(any())).thenReturn(returnedUser);
         mockMvc.perform(
                 post("/profile/update")
-                        .param("lastName", VALID_LAST_NAME)
-                        .param("firstName", VALID_FIRST_NAME)
-                        .param("patronymic", VALID_PATRONYMIC)
+                        .param("lastName", VALID_USER_LAST_NAME)
+                        .param("firstName", VALID_USER_FIRST_NAME)
+                        .param("patronymic", VALID_USER_PATRONYMIC)
         ).andExpect(status().isOk())
                 .andExpect(model().attributeExists("message"));
     }
@@ -570,11 +570,11 @@ class ProfileControllerTest {
     private UserProfileDTO getValidUserProfileDTO() {
         UserProfileDTO userProfileDTO = new UserProfileDTO();
         userProfileDTO.setId(VALID_ID);
-        userProfileDTO.setLastName(VALID_LAST_NAME);
-        userProfileDTO.setFirstName(VALID_FIRST_NAME);
-        userProfileDTO.setPatronymic(VALID_PATRONYMIC);
-        userProfileDTO.setAddress(VALID_ADDRESS);
-        userProfileDTO.setPhone(VALID_PHONE);
+        userProfileDTO.setLastName(VALID_USER_LAST_NAME);
+        userProfileDTO.setFirstName(VALID_USER_FIRST_NAME);
+        userProfileDTO.setPatronymic(VALID_USER_PATRONYMIC);
+        userProfileDTO.setAddress(VALID_USER_ADDRESS);
+        userProfileDTO.setPhone(VALID_USER_PHONE);
         return userProfileDTO;
     }
 

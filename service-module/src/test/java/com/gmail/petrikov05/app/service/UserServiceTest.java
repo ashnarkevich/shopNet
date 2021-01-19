@@ -31,7 +31,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_ADDRESS;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_COUNT_OF_ENTITIES;
@@ -49,6 +48,7 @@ import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_PHONE
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_START_POSITION;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_USER_ID;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_USER_ROLE;
+import static com.gmail.petrikov05.app.service.constant.UserConstant.USER_ANONYMOUS;
 import static com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum.CUSTOMER_USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -353,7 +353,7 @@ class UserServiceTest {
         SecurityContextHolder.setContext(securityContext);
         Authentication authentication = mock(Authentication.class);
         when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("ANONYMOUS");
+        when(authentication.getName()).thenReturn(USER_ANONYMOUS);
         assertThatExceptionOfType(AnonymousUserException.class)
                 .isThrownBy(() -> userService.getUserProfile());
         assertThrows(
@@ -414,7 +414,7 @@ class UserServiceTest {
         SecurityContextHolder.setContext(securityContext);
         Authentication authentication = mock(Authentication.class);
         when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("ANONYMOUS");
+        when(authentication.getName()).thenReturn(USER_ANONYMOUS);
         assertThatExceptionOfType(AnonymousUserException.class)
                 .isThrownBy(() -> userService.getUserProfile());
         assertThrows(
@@ -446,7 +446,7 @@ class UserServiceTest {
         SecurityContextHolder.setContext(securityContext);
         Authentication authentication = mock(Authentication.class);
         when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("ANONYMOUS");
+        when(authentication.getName()).thenReturn(USER_ANONYMOUS);
         assertThatExceptionOfType(AnonymousUserException.class)
                 .isThrownBy(() -> userService.getUserProfile());
         assertThrows(

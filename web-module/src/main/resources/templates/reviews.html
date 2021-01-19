@@ -54,7 +54,7 @@
 </div>
 <div th:unless="${not #lists.isEmpty(reviews)}">Reviews not found.</div>
 
-<th:block th:insert="skeleton/link :: link_pagination">pagination</th:block>
+<th:block th:insert="skeleton/link :: link_review_pagination">pagination</th:block>
 
 <th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
 </body>

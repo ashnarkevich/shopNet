@@ -12,10 +12,10 @@ public interface GenericRepository<L, T> {
 
     void merge(T t);
 
-    void add(T t);
+    T add(T t);
 
     T getObjectByID(L id);
 
-    List<Article> getAllObjects();
+    List<T> getAllObjects();
 
 }

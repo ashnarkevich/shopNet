@@ -1,6 +1,5 @@
 package com.gmail.petrikov05.app.service.model.user;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -9,7 +8,7 @@ import javax.validation.constraints.Size;
 import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_NOT_EMPTY;
 import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_REGEX_EMAIL;
 import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_REGEX_NAME;
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_ROLE_NOT_NULL;
+import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_USER_ROLE_NOT_NULL;
 import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_SIZE_FIRST_NAME;
 import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_SIZE_LAST_NAME;
 import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_SIZE_MAX_EMAIL;
@@ -42,7 +41,7 @@ public class AddUserDTO {
     @Size(max = SIZE_MAX_EMAIL, message = MESSAGE_SIZE_MAX_EMAIL)
     @Pattern(regexp = REGEXP_EMAIL, message = MESSAGE_REGEX_EMAIL)
     private String email;
-    @NotNull(message = MESSAGE_ROLE_NOT_NULL)
+    @NotNull(message = MESSAGE_USER_ROLE_NOT_NULL)
     private UserRoleDTOEnum role;
 
     public String getLastName() {

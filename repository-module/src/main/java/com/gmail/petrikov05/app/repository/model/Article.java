@@ -1,6 +1,7 @@
 package com.gmail.petrikov05.app.repository.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
@@ -37,7 +38,7 @@ public class Article {
     @OneToMany(mappedBy = "article",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     public Long getId() {
         return id;

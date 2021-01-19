@@ -18,3 +18,8 @@ VALUES ('Test article title', '2020-12-15', 'This is the article text.', 2);
 
 INSERT INTO comment (date, text, article_id, author_id)
 VALUES ( '2020-8-30 21:23:34', 'This is the comment text.', 1, 3);
+
+INSERT INTO orders (number, status, date_create, total_price, item_id, customer_id, item_amount)
+VALUES ('5-2021', 'NEW', '2020-08-22 08:25:30', 690.30, 1, 2, 45);
+
+INSERT INTO item (name, number, price) VALUES ( 'testItemName', 'art2435', 15.34);

@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_DATE;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_ID;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_TEXT;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_TITLE;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_AUTHOR;
@@ -38,8 +39,8 @@ class ArticleControllerITTest {
                         .contentType(MediaType.TEXT_HTML)
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains("1");
-        assertThat(actualResult).contains("article title");
+        assertThat(actualResult).contains(String.valueOf(VALID_ARTICLE_ID));
+        assertThat(actualResult).contains(VALID_ARTICLE_TITLE);
         assertThat(actualResult).contains(String.valueOf(VALID_ARTICLE_DATE));
         assertThat(actualResult).contains(VALID_AUTHOR);
         assertThat(actualResult).contains(VALID_ARTICLE_TEXT);
