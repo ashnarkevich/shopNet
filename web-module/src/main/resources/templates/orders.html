@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>articles</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<h1>Orders</h1>
+
+<th:block th:insert="skeleton/link::link_main_page"></th:block>
+
+<th:block th:insert="skeleton/message :: message_warning">message</th:block>
+
+<div th:if="${not #lists.isEmpty(orders)}">
+    <table>
+        <thead>
+        <th>id</th>
+        <th>number</th>
+        <th>status</th>
+        <th>date create</th>
+        <th>item name</th>
+        <th>item amount</th>
+        <th>total price</th>
+        <th>active</th>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}" th:object="${order}">
+            <td th:text="*{id}"></td>
+            <td th:text="*{number}"></td>
+            <td th:text="*{status}"></td>
+            <td th:text="*{dateCreate}"></td>
+            <td th:text="*{itemName}"></td>
+            <td th:text="*{itemAmount}"></td>
+            <td th:text="*{totalPrice}"></td>
+            <td><a th:href="@{/orders/{number}(number=*{number})}">view</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:unless="${not #lists.isEmpty(orders)}">Orders not found.</div>
+<th:block th:insert="skeleton/link::link_order_pagination">page</th:block>
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>

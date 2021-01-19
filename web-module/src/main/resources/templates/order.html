@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <title>order</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<h1>order</h1>
+
+<th:block th:insert="skeleton/link::link_main_page"></th:block>
+
+<th:block th:insert="skeleton/message :: message_warning">message</th:block>
+
+<div th:if="${order != null}">
+    <ul th:object="${order}">
+        <li>number: <span th:text="*{number}"></span></li>
+        <li>number: <span th:text="*{status}"></span></li>
+        <li>number: <span th:text="*{dateCreate}"></span></li>
+        <li>customer id: <span th:text="*{customerId}"></span></li>
+        <li>customer phone: <span th:text="*{customerPhone}"></span></li>
+        <li>Item name: <span th:text="*{itemName}"></span></li>
+        <li>item amount: <span th:text="*{itemAmount}"></span></li>
+        <li>total price: <span th:text="*{totalPrice}"></span></li>
+    </ul>
+</div>
+<div th:if="${order == null}">The order is non existent.</div>
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>
