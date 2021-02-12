@@ -11,7 +11,7 @@ public class CommentConverter {
 
     public static CommentDTO convertObjectToDTO( Comment comment) {
         CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setId(comment.getId());
+        commentDTO.setCommentId(comment.getId());
         commentDTO.setDate(comment.getDate());
         commentDTO.setText(comment.getText());
         String author = comment.getAuthor().getUserDetails().getLastName() + " "

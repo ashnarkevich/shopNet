@@ -49,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = ReviewController.class)
 @Import(TestConfig.class)
-@WithMockUser(roles = "ADMINISTRATOR")
+@WithMockUser(roles = {"ADMINISTRATOR", "CUSTOMER_USER"})
 class ReviewControllerTest {
 
     @Autowired

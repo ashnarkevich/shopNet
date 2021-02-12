@@ -4,17 +4,17 @@ import java.time.LocalDateTime;
 
 public class CommentDTO {
 
-    private Long id;
+    private Long commentId;
     private String author;
     private LocalDateTime date;
     private String text;
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 
-    public Long getId() {
-        return id;
+    public Long getCommentId() {
+        return commentId;
     }
 
     public void setAuthor(String author) {

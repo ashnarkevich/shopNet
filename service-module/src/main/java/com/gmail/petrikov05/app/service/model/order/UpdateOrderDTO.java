@@ -2,7 +2,7 @@ package com.gmail.petrikov05.app.service.model.order;
 
 import javax.validation.constraints.NotNull;
 
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_ORDER_STATUS_NOT_NULL;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_ORDER_STATUS_NOT_NULL;
 
 public class UpdateOrderDTO {
 

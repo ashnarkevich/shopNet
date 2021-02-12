@@ -8,9 +8,10 @@ import java.util.stream.IntStream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.petrikov05.app.service.ArticleService;
 import com.gmail.petrikov05.app.service.exception.AnonymousUserException;
+import com.gmail.petrikov05.app.service.exception.ObjectDBException;
 import com.gmail.petrikov05.app.service.model.article.AddArticleDTO;
 import com.gmail.petrikov05.app.service.model.article.ArticleDTO;
-import com.gmail.petrikov05.app.service.model.article.ArticleWithCommentsDTO;
+import com.gmail.petrikov05.app.service.model.article.ArticlePreviewDTO;
 import com.gmail.petrikov05.app.service.model.comment.CommentDTO;
 import com.gmail.petrikov05.app.web.config.TestConfig;
 import com.gmail.petrikov05.app.web.constant.MessageConstant;
@@ -26,6 +27,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_ARTICLE_DELETED;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_ARTICLE_DELETED_FAIL;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_DATE;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_DATE_PUBLICATION;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_ID;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_TEXT;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_TITLE;
@@ -79,7 +81,7 @@ public class ArticleAPIControllerTest {
 
     @Test
     void getArticles_returnValidListArticles() throws Exception {
-        List<ArticleDTO> returnedArticles = getValidArticleDTOS();
+        List<ArticlePreviewDTO> returnedArticles = getValidArticlePreviewDTOS();
         when(articleService.getAllArticles()).thenReturn(returnedArticles);
         MvcResult mvcResult = mockMvc.perform(get("/api/articles"))
                 .andReturn();
@@ -113,7 +115,7 @@ public class ArticleAPIControllerTest {
 
     @Test
     void getArticle_returnValidArticle() throws Exception {
-        ArticleWithCommentsDTO returnedArticle = getValidArticleWithCommentsDTO();
+        ArticleDTO returnedArticle = getValidArticleDTO();
         when(articleService.getArticleById(anyLong())).thenReturn(returnedArticle);
         MvcResult mvcResult = mockMvc.perform(
                 get("/api/articles/2")
@@ -217,6 +219,18 @@ public class ArticleAPIControllerTest {
     }
 
     @Test
+    void addArticleWithEmptyDatePublication_returnBadRequest() throws Exception {
+        AddArticleDTO addArticle = getValidAddArticleDTO();
+        addArticle.setDatePublication(null);
+        String content = objectMapper.writeValueAsString(addArticle);
+        mockMvc.perform(
+                post("/api/articles")
+                        .contentType(APPLICATION_JSON)
+                        .content(content)
+        ).andExpect(status().isBadRequest());
+    }
+
+    @Test
     void addArticle_callBusinessLogic() throws Exception, AnonymousUserException {
         AddArticleDTO addArticle = getValidAddArticleDTO();
         String content = objectMapper.writeValueAsString(addArticle);
@@ -273,7 +287,7 @@ public class ArticleAPIControllerTest {
     }
 
     @Test
-    void deleteArticleById_callBusinessLogic() throws Exception {
+    void deleteArticleById_callBusinessLogic() throws Exception, ObjectDBException {
         mockMvc.perform(
                 delete("/api/articles/1")
         ).andExpect(status().isOk());
@@ -281,7 +295,7 @@ public class ArticleAPIControllerTest {
     }
 
     @Test
-    void deleteArticleByValidId_returnMessage() throws Exception {
+    void deleteArticleByValidId_returnMessage() throws Exception, ObjectDBException {
         when(articleService.deleteById(anyLong())).thenReturn(true);
         MvcResult mvcResult = mockMvc.perform(
                 delete("/api/articles/1")
@@ -292,7 +306,7 @@ public class ArticleAPIControllerTest {
     }
 
     @Test
-    void deleteArticleByInvalidId_returnMessage() throws Exception {
+    void deleteArticleByInvalidId_returnMessage() throws Exception, ObjectDBException {
         when(articleService.deleteById(anyLong())).thenReturn(false);
         MvcResult mvcResult = mockMvc.perform(
                 delete("/api/articles/1")
@@ -301,6 +315,7 @@ public class ArticleAPIControllerTest {
         String actualResult = mvcResult.getResponse().getContentAsString();
         assertThat(actualResult).isEqualTo(MESSAGE_ARTICLE_DELETED_FAIL);
     }
+    /* finish delete article by id */
 
     private String getStringWithLength(int length) {
         return IntStream.range(0, length)
@@ -312,18 +327,20 @@ public class ArticleAPIControllerTest {
         AddArticleDTO article = new AddArticleDTO();
         article.setTitle(VALID_ARTICLE_TITLE);
         article.setText(VALID_ARTICLE_TEXT);
+        article.setDatePublication(VALID_ARTICLE_DATE_PUBLICATION);
         return article;
     }
 
-    private ArticleWithCommentsDTO getValidArticleWithCommentsDTO() {
-        ArticleWithCommentsDTO articleWithComments = new ArticleWithCommentsDTO();
-        articleWithComments.setId(VALID_ARTICLE_ID);
-        articleWithComments.setTitle(VALID_ARTICLE_TITLE);
-        articleWithComments.setDate(VALID_ARTICLE_DATE);
-        articleWithComments.setAuthor(VALID_AUTHOR);
-        articleWithComments.setText(VALID_ARTICLE_TEXT);
-        articleWithComments.setComments(getValidComments());
-        return articleWithComments;
+    private ArticleDTO getValidArticleDTO() {
+        ArticleDTO article = new ArticleDTO();
+        article.setId(VALID_ARTICLE_ID);
+        article.setTitle(VALID_ARTICLE_TITLE);
+        article.setDateCreate(VALID_ARTICLE_DATE);
+        article.setDatePublication(VALID_ARTICLE_DATE_PUBLICATION);
+        article.setAuthor(VALID_AUTHOR);
+        article.setText(VALID_ARTICLE_TEXT);
+        article.setComments(getValidComments());
+        return article;
     }
 
     private List<CommentDTO> getValidComments() {
@@ -334,27 +351,28 @@ public class ArticleAPIControllerTest {
 
     private CommentDTO getValidCommentDTO() {
         CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setId(VALID_COMMENT_ID);
+        commentDTO.setCommentId(VALID_COMMENT_ID);
         commentDTO.setAuthor(VALID_COMMENT_AUTHOR);
         commentDTO.setDate(VALID_COMMENT_DATE);
         commentDTO.setText(VALID_COMMENT_TEXT);
         return commentDTO;
     }
 
-    private List<ArticleDTO> getValidArticleDTOS() {
-        List<ArticleDTO> articleDTOS = new ArrayList<>();
-        articleDTOS.add(getValidArticleDTO());
-        return articleDTOS;
+    private List<ArticlePreviewDTO> getValidArticlePreviewDTOS() {
+        List<ArticlePreviewDTO> articles = new ArrayList<>();
+        articles.add(getValidArticlePreviewDTO());
+        return articles;
     }
 
-    private ArticleDTO getValidArticleDTO() {
-        ArticleDTO articleDTO = new ArticleDTO();
-        articleDTO.setId(VALID_ID);
-        articleDTO.setTitle(VALID_ARTICLE_TITLE);
-        articleDTO.setDate(VALID_DATE);
-        articleDTO.setAuthor(VALID_AUTHOR);
-        articleDTO.setText(VALID_ARTICLE_TEXT);
-        return articleDTO;
+    private ArticlePreviewDTO getValidArticlePreviewDTO() {
+        ArticlePreviewDTO article = new ArticlePreviewDTO();
+        article.setId(VALID_ID);
+        article.setTitle(VALID_ARTICLE_TITLE);
+        article.setDateCreate(VALID_DATE);
+        article.setDatePublication(VALID_ARTICLE_DATE_PUBLICATION);
+        article.setAuthor(VALID_AUTHOR);
+        article.setText(VALID_ARTICLE_TEXT);
+        return article;
     }
 
 }

@@ -3,6 +3,7 @@ package com.gmail.petrikov05.app.web.config;
 import com.gmail.petrikov05.app.web.controller.security.LoginAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -45,13 +46,46 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").not().fullyAuthenticated()
-                .antMatchers("/users").hasRole(ADMINISTRATOR.name())
-                .antMatchers("/reviews").hasRole(ADMINISTRATOR.name())
-                .antMatchers("/orders").hasAnyRole(SALE_USER.name(), CUSTOMER_USER.name())
-                .antMatchers("/articles").hasRole(CUSTOMER_USER.name())
-                .antMatchers("/profile").hasRole(CUSTOMER_USER.name())
-                .antMatchers("/items").hasRole(CUSTOMER_USER.name())
-                .antMatchers("/api/*").hasRole(SECURE_API_USER.name())
+                // api
+                .antMatchers("/api/**").hasRole(SECURE_API_USER.name())
+                // articles
+                .antMatchers(HttpMethod.GET, "/articles").hasAnyRole(CUSTOMER_USER.name(), SALE_USER.name())
+                .antMatchers(HttpMethod.POST, "/articles").hasRole(SALE_USER.name())
+                .antMatchers(HttpMethod.GET, "/articles/add").hasRole(SALE_USER.name())
+                .antMatchers(HttpMethod.GET, "/articles/*").hasAnyRole(CUSTOMER_USER.name(), SALE_USER.name())
+                .antMatchers(HttpMethod.GET, "/articles/*/update").hasRole(SALE_USER.name())
+                .antMatchers(HttpMethod.POST, "/articles/*/update").hasRole(SALE_USER.name())
+                .antMatchers(HttpMethod.GET, "/articles/*/delete").hasRole(SALE_USER.name())
+                .antMatchers(HttpMethod.POST, "/articles/*/comments/*/delete").hasRole(SALE_USER.name())
+                // items
+                .antMatchers(HttpMethod.GET, "/items").hasAnyRole(CUSTOMER_USER.name(), SALE_USER.name())
+                .antMatchers(HttpMethod.GET, "/items/*").hasAnyRole(CUSTOMER_USER.name(), SALE_USER.name())
+                .antMatchers(HttpMethod.GET, "/items/*/delete").hasRole(SALE_USER.name())
+                .antMatchers(HttpMethod.GET, "/items/*/copy").hasRole(SALE_USER.name())
+                // orders
+                .antMatchers(HttpMethod.GET, "/orders").hasAnyRole(CUSTOMER_USER.name(), SALE_USER.name())
+                .antMatchers(HttpMethod.POST, "/orders").hasRole(CUSTOMER_USER.name())
+                .antMatchers(HttpMethod.GET, "/orders/*").hasAnyRole(CUSTOMER_USER.name(), SALE_USER.name())
+                .antMatchers(HttpMethod.POST, "/orders/*/update").hasRole(SALE_USER.name())
+                // profile
+                .antMatchers(HttpMethod.GET, "/profile").hasRole(CUSTOMER_USER.name())
+                .antMatchers(HttpMethod.GET, "/profile/update").hasRole(CUSTOMER_USER.name())
+                .antMatchers(HttpMethod.POST, "/profile/update").hasRole(CUSTOMER_USER.name())
+                .antMatchers(HttpMethod.GET, "/profile/changePass").hasRole(CUSTOMER_USER.name())
+                .antMatchers(HttpMethod.POST, "/profile/changePass").hasRole(CUSTOMER_USER.name())
+                // reviews
+                .antMatchers(HttpMethod.GET, "/reviews").hasRole(ADMINISTRATOR.name())
+                .antMatchers(HttpMethod.POST, "/reviews/delete").hasRole(ADMINISTRATOR.name())
+                .antMatchers(HttpMethod.GET, "/reviews/add").hasRole(CUSTOMER_USER.name())
+                .antMatchers(HttpMethod.POST, "/reviews/add").hasRole(CUSTOMER_USER.name())
+                // user
+                .antMatchers(HttpMethod.GET, "/users").hasRole(ADMINISTRATOR.name())
+                .antMatchers(HttpMethod.POST, "/users/delete").hasRole(ADMINISTRATOR.name())
+                .antMatchers(HttpMethod.GET, "/users/*/updateRole").hasRole(ADMINISTRATOR.name())
+                .antMatchers(HttpMethod.GET, "/users/*/updatePass").hasRole(ADMINISTRATOR.name())
+                .antMatchers(HttpMethod.GET, "/users/add").hasRole(ADMINISTRATOR.name())
+                .antMatchers(HttpMethod.POST, "/users/add").hasRole(ADMINISTRATOR.name())
+//                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")

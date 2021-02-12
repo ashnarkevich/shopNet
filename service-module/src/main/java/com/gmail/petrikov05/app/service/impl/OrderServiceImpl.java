@@ -2,7 +2,9 @@ package com.gmail.petrikov05.app.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
@@ -13,6 +15,7 @@ import com.gmail.petrikov05.app.repository.model.Order;
 import com.gmail.petrikov05.app.repository.model.User;
 import com.gmail.petrikov05.app.repository.model.UserInformation;
 import com.gmail.petrikov05.app.repository.model.constant.OrderStatusEnum;
+import com.gmail.petrikov05.app.repository.model.constant.UserRoleEnum;
 import com.gmail.petrikov05.app.service.OrderService;
 import com.gmail.petrikov05.app.service.UserService;
 import com.gmail.petrikov05.app.service.exception.AnonymousUserException;
@@ -28,7 +31,6 @@ import com.gmail.petrikov05.app.service.util.converter.OrderConverter;
 import org.springframework.stereotype.Service;
 
 import static com.gmail.petrikov05.app.repository.model.constant.OrderStatusEnum.NEW;
-import static com.gmail.petrikov05.app.repository.model.constant.UserRoleEnum.CUSTOMER_USER;
 import static com.gmail.petrikov05.app.service.constant.MessageConstant.MESSAGE_ITEM_NOT_FOUND;
 import static com.gmail.petrikov05.app.service.constant.PageConstant.COUNT_OF_ORDER_BY_PAGE;
 import static com.gmail.petrikov05.app.service.util.PageUtil.getStartPosition;
@@ -38,8 +40,8 @@ import static com.gmail.petrikov05.app.service.util.converter.OrderConverter.con
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private static int countOfOrdersPerYear = 0;
-    private static int year = LocalDate.now().getYear();
+    private static int countOfOrdersPerYear = 1;
+    private static int year = 2021;
 
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
@@ -105,7 +107,6 @@ public class OrderServiceImpl implements OrderService {
         order.setNumber(number);
         order.setStatus(NEW);
         order = orderRepository.add(order);
-        System.out.println(order.getStatus());
         return convertObjectToWithDetailsDTO(order);
     }
 
@@ -131,10 +132,17 @@ public class OrderServiceImpl implements OrderService {
 
     private List<Order> getOrdersByPageByUser(int startPosition) throws AnonymousUserException {
         User user = userService.getCurrentUser();
-        if (user.getRole().equals(CUSTOMER_USER)) {
-            return orderRepository.getOrdersByPageByUser(startPosition, COUNT_OF_ORDER_BY_PAGE, user);
-        } else {
-            return orderRepository.getOrdersByPage(startPosition, COUNT_OF_ORDER_BY_PAGE);
+        UserRoleEnum userRole = user.getRole();
+        switch (userRole) {
+            case CUSTOMER_USER: {
+                return orderRepository.getOrdersByPageByUser(startPosition, COUNT_OF_ORDER_BY_PAGE, user);
+            }
+            case SALE_USER: {
+                return orderRepository.getOrdersByPage(startPosition, COUNT_OF_ORDER_BY_PAGE);
+            }
+            default: {
+                return Collections.emptyList();
+            }
         }
     }
 
@@ -153,16 +161,15 @@ public class OrderServiceImpl implements OrderService {
             countOfOrdersPerYear = 0;
             year = currentYear;
         }
-        countOfOrdersPerYear++;
-        return countOfOrdersPerYear + "-" + currentYear;
+        return countOfOrdersPerYear++ + "-" + currentYear;
     }
 
     private Item getItem(String number) throws ObjectDBException {
-        Item item = itemRepository.getItemsByNumber(number);
-        if (item == null) {
+        Optional<Item> item = itemRepository.getItemByNumber(number);
+        if (!item.isPresent()) {
             throw new ObjectDBException(MESSAGE_ITEM_NOT_FOUND);
         }
-        return item;
+        return item.get();
     }
 
     private int getPages() {

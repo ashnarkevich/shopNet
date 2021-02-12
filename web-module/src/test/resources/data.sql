@@ -13,13 +13,16 @@ VALUES ((SELECT id FROM user WHERE email = 'best@best.com'), 'BestLastName', 'Be
 INSERT INTO review (text, date_create, is_active, author_id)
 VALUES ('This is the review text.', '2020-05-03', 1, 2);
 
-INSERT INTO article (title, date, text, author_id)
-VALUES ('Test article title', '2020-12-15', 'This is the article text.', 2);
+INSERT INTO article (title, date_create, date_publication, text, author_id)
+VALUES ('Test article title', '2020-12-15', '2015-02-20 06:30', 'This is the article text.', 2);
 
 INSERT INTO comment (date, text, article_id, author_id)
-VALUES ( '2020-8-30 21:23:34', 'This is the comment text.', 1, 3);
+VALUES ('2020-8-30 21:23:34', 'This is the comment text.', 1, 3);
 
 INSERT INTO orders (number, status, date_create, total_price, item_id, customer_id, item_amount)
 VALUES ('5-2021', 'NEW', '2020-08-22 08:25:30', 690.30, 1, 2, 45);
 
-INSERT INTO item (name, number, price) VALUES ( 'testItemName', 'art2435', 15.34);
+INSERT INTO item (name, number, price)
+VALUES ('testItemName', '09354376-13f9-4e05-b550-1abdddca7bd4', 15.34);
+INSERT INTO item_details (item_id, description)
+VALUES ((SELECT id FROM item WHERE number = '09354376-13f9-4e05-b550-1abdddca7bd4'), 'Test item description')

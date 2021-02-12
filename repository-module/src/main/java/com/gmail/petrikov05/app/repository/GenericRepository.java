@@ -10,7 +10,7 @@ public interface GenericRepository<L, T> {
 
     boolean delete(T t);
 
-    void merge(T t);
+    T merge(T t);
 
     T add(T t);
 

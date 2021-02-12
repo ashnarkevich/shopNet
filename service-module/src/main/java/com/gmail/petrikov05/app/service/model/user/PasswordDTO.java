@@ -3,9 +3,9 @@ package com.gmail.petrikov05.app.service.model.user;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_NOT_EMPTY;
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_REGEX_PASSWORD;
-import static com.gmail.petrikov05.app.service.constant.ValidationRules.REGEXP_PASSWORD;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_NOT_EMPTY;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_REGEX_PASSWORD;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationRules.REGEXP_PASSWORD;
 
 public class PasswordDTO {
 

@@ -1,18 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <title>meta-data page</title>
 </head>
 <body>
 <th:block th:fragment="header_menu">
     <ul>
-        <li><a href="#" th:href="@{/users}">users</a></li>
-        <li><a href="#" th:href="@{/reviews}">reviews</a></li>
-        <li><a href="#" th:href="@{/reviews/add}">add review</a></li>
-        <li><a href="#" th:href="@{/articles}">articles</a></li>
-        <li><a href="#" th:href="@{/profile}">profile</a></li>
-        <li><a href="#" th:href="@{/orders}">orders</a></li>
-        <li><a href="#" th:href="@{/items}">items</a></li>
+        <li sec:authorize="hasRole('ADMINISTRATOR')"><a href="#" th:href="@{/users}">users</a></li>
+
+        <li sec:authorize="hasRole('ADMINISTRATOR')"><a href="#" th:href="@{/reviews}">reviews</a></li>
+        <li sec:authorize="hasRole('CUSTOMER_USER')"><a href="#" th:href="@{/reviews/add}">add review</a></li>
+
+        <li sec:authorize="hasAnyRole('CUSTOMER_USER', 'SALE_USER')"><a href="#" th:href="@{/articles}">articles</a></li>
+
+        <li sec:authorize="hasRole('CUSTOMER_USER')"><a href="#" th:href="@{/profile}">profile</a></li>
+
+        <li sec:authorize="hasAnyRole('SALE_USER', 'CUSTOMER_USER')"><a href="#" th:href="@{/orders}">orders</a></li>
+
+        <li sec:authorize="hasAnyRole('SALE_USER', 'CUSTOMER_USER')"><a href="#" th:href="@{/items}">items</a></li>
     </ul>
 </th:block>
 </body>

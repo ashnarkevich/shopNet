@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
->
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!--      xmlns:sec="http://www.w3.org/1999/xhtml"-->
 <head>
-    <title>articles</title>
+    <title>items</title>
     <th:block th:insert="skeleton/meta::head_meta"></th:block>
     <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
 </head>
@@ -26,8 +27,19 @@
             <td th:text="*{name}"></td>
             <td th:text="*{number}"></td>
             <td th:text="*{price}"></td>
-            <td>
+            <td sec:authorize="hasRole('SALE_USER')">
+                <a th:href="@{/items/{number}(number=*{number}, page=${page})}">view</a>
+                <a th:href="@{/items/{number}/copy(number=*{number}, page=${page})}">copy</a>
+                <a th:href="@{/items/{number}/delete(number=*{number}, page=${page})}">delete</a>
+            </td>
+            <td sec:authorize="hasRole('CUSTOMER_USER')">
                 <a th:href="@{/items/{number}(number=*{number})}">view</a>
+                </br>
+                <form action="#" th:action="@{/orders}" method="post">
+                    <input type="text" name="itemNumber" th:value="*{number}" hidden>
+                    <input type="number" name="itemAmount">
+                    <input type="submit" value="buy">
+                </form>
             </td>
         </tr>
         </tbody>
@@ -35,7 +47,7 @@
 </div>
 <div th:unless="${not #lists.isEmpty(items)}">Items not found.</div>
 
-<!--<th:block th:insert="skeleton/link :: link_items_pagination">pagination</th:block>-->
+<th:block th:insert="skeleton/link :: link_items_pagination">pagination</th:block>
 
 <th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
 </body>

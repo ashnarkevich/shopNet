@@ -69,7 +69,7 @@ public class ReviewController {
             String message = addedReview.getAuthor() + " Your review was send.";
             redirectAttributes.addFlashAttribute("message", message);
         } catch (AnonymousUserException e) {
-            redirectAttributes.addFlashAttribute("error", MESSAGE_ACCESS_CLOSE);
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/";
     }

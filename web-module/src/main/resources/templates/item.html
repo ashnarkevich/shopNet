@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>item</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<h1>Item page</h1>
+
+<th:block th:insert="skeleton/link::link_main_page"></th:block>
+
+<th:block th:insert="skeleton/message :: message_warning">message</th:block>
+
+<div th:if="${item} != null">
+    <ul th:object="${item}">
+        <li th:text="*{name}">name not found</li>
+        <li th:text="*{number}">number not found</li>
+        <li th:text="*{price}">price not found</li>
+        <li th:text="*{description}">description not found</li>
+    </ul>
+</div>
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>

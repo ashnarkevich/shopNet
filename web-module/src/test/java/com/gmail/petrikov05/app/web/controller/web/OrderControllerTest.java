@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.gmail.petrikov05.app.service.OrderService;
+import com.gmail.petrikov05.app.service.constant.validation.ItemValidationMessage;
+import com.gmail.petrikov05.app.service.constant.validation.ValidationMessages;
 import com.gmail.petrikov05.app.service.exception.AnonymousUserException;
 import com.gmail.petrikov05.app.service.exception.ObjectDBException;
 import com.gmail.petrikov05.app.service.exception.UserInformationException;
@@ -29,8 +31,9 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static com.gmail.petrikov05.app.service.constant.MessageConstant.MESSAGE_ITEM_NOT_FOUND;
 import static com.gmail.petrikov05.app.service.constant.MessageConstant.MESSAGE_USER_WITHOUT_INFORMATION;
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_ITEM_AMOUNT_NOT_EMPTY;
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_ORDER_STATUS_NOT_NULL;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_ITEM_AMOUNT_NOT_EMPTY;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_NOT_EMPTY;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_ORDER_STATUS_NOT_NULL;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_ACCESS_CLOSE;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_ORDER_NOT_FOUND;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_ORDER_UPDATED;
@@ -410,7 +413,7 @@ class OrderControllerTest {
                 .param("itemAmount", String.valueOf(VALID_ITEM_AMOUNT))
         ).andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/items"))
-                .andExpect(flash().attribute("error", "Sorry. Try else time."));
+                .andExpect(flash().attribute("error", MESSAGE_NOT_EMPTY));
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.gmail.petrikov05.app.repository.impl;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
@@ -19,25 +20,32 @@ public class ItemRepositoryImpl extends GenericRepositoryImpl<Long, Item> implem
     @Override
     @SuppressWarnings("unchecked")
     public List<Item> getItemsByPage(int startPosition, int maxResult) {
-        String strQuery = "FROM " + entityClass.getSimpleName() + " i ORDER BY i.name";
-        Query query = entityManager.createQuery(strQuery);
+        String queryStr = "FROM " + entityClass.getSimpleName() + " i ORDER BY i.name";
+        Query query = entityManager.createQuery(queryStr);
         query.setFirstResult(startPosition);
         query.setMaxResults(maxResult);
         return query.getResultList();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Item getItemsByNumber(String number) {
-        String strQuery = "FROM " + entityClass.getSimpleName() + " i WHERE i.number = :number";
-        Query query = entityManager.createQuery(strQuery);
+    public Optional<Item> getItemByNumber(String number) {
+        String queryStr = "FROM " + entityClass.getSimpleName() + " i WHERE i.number = :number";
+        Query query = entityManager.createQuery(queryStr);
         query.setParameter("number", number);
         try {
-            return (Item) query.getSingleResult();
+            return Optional.of((Item) query.getSingleResult());
         } catch (NoResultException e) {
-            logger.info("item with number ( " + number + " ) not found");
-            return null;
+            logger.info("Item with number (" + number + ") not found");
+            return Optional.empty();
         }
+    }
+
+    @Override
+    public Long getCountItemByName(String name) {
+        String queryStr = "SELECT COUNT(*) FROM " + entityClass.getSimpleName() + " i WHERE i.name = :name";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter("name", name);
+        return (Long) query.getSingleResult();
     }
 
 }
