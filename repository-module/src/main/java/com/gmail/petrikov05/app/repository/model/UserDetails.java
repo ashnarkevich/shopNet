@@ -23,8 +23,8 @@ public class UserDetails {
             parameters = @Parameter(name = "property", value = "user")
     )
 
-    @Column(name = "user_id")
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(generator = "generator")
     private Long userId;
     @Column(name = "last_name")

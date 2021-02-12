@@ -1,18 +1,15 @@
 package com.gmail.petrikov05.app.service.model.article;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import com.gmail.petrikov05.app.service.model.comment.CommentDTO;
-
-public class ArticleWithCommentsDTO {
+public class ArticlePreviewDTO {
 
     private Long id;
     private String title;
-    private LocalDateTime date;
+    private LocalDateTime dateCreate;
     private String author;
     private String text;
-    private List<CommentDTO> comments;
+    private LocalDateTime datePublication;
 
     public void setId(Long id) {
         this.id = id;
@@ -30,12 +27,12 @@ public class ArticleWithCommentsDTO {
         return title;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setDateCreate(LocalDateTime dateCreate) {
+        this.dateCreate = dateCreate;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getDateCreate() {
+        return dateCreate;
     }
 
     public void setAuthor(String author) {
@@ -54,12 +51,12 @@ public class ArticleWithCommentsDTO {
         return text;
     }
 
-    public void setComments(List<CommentDTO> comments) {
-        this.comments = comments;
+    public LocalDateTime getDatePublication() {
+        return datePublication;
     }
 
-    public List<CommentDTO> getComments() {
-        return comments;
+    public void setDatePublication(LocalDateTime datePublication) {
+        this.datePublication = datePublication;
     }
 
 }

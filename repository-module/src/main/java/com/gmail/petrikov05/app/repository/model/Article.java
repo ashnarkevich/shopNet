@@ -26,8 +26,10 @@ public class Article {
     private Long id;
     @Column
     private String title;
-    @Column
-    private LocalDateTime date;
+    @Column(name = "date_create")
+    private LocalDateTime dateCreate;
+    @Column(name = "date_publication")
+    private LocalDateTime datePublication;
     @Column
     private String text;
 
@@ -56,12 +58,12 @@ public class Article {
         this.title = title;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getDateCreate() {
+        return dateCreate;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setDateCreate(LocalDateTime dateCreate) {
+        this.dateCreate = dateCreate;
     }
 
     public String getText() {
@@ -97,14 +99,22 @@ public class Article {
             return false;
         }
         Article article = (Article) o;
-        return Objects.equals(id, article.id) && Objects.equals(title, article.title) && Objects.equals(date,
-                article.date) && Objects.equals(text, article.text) && Objects.equals(author,
+        return Objects.equals(id, article.id) && Objects.equals(title, article.title) && Objects.equals(dateCreate,
+                article.dateCreate) && Objects.equals(text, article.text) && Objects.equals(author,
                 article.author) && Objects.equals(comments, article.comments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, date, text, author, comments);
+        return Objects.hash(id, title, dateCreate, text, author, comments);
+    }
+
+    public LocalDateTime getDatePublication() {
+        return datePublication;
+    }
+
+    public void setDatePublication(LocalDateTime datePublication) {
+        this.datePublication = datePublication;
     }
 
 }

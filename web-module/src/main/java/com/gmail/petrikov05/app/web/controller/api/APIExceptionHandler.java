@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @ControllerAdvice(basePackages = "com.gmail.petrikov05.app.web.controller.api")
 public class APIExceptionHandler {
@@ -37,7 +38,7 @@ public class APIExceptionHandler {
         return e.getMessage();
     }
 
-    private static class ResponseError {
+    public static class ResponseError {
 
         private List<String> errors;
 

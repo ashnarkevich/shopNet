@@ -1,24 +1,21 @@
 package com.gmail.petrikov05.app.service.model.user;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.gmail.petrikov05.app.service.constant.ValidationRules;
-
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_NOT_EMPTY;
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_REGEX_NAME;
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_SIZE_FIRST_NAME;
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_SIZE_LAST_NAME;
-import static com.gmail.petrikov05.app.service.constant.ValidationMessages.MESSAGE_SIZE_PATRONYMIC;
-import static com.gmail.petrikov05.app.service.constant.ValidationRules.REGEXP_NAME;
-import static com.gmail.petrikov05.app.service.constant.ValidationRules.SIZE_MAX_FIRST_NAME;
-import static com.gmail.petrikov05.app.service.constant.ValidationRules.SIZE_MAX_LAST_NAME;
-import static com.gmail.petrikov05.app.service.constant.ValidationRules.SIZE_MAX_PATRONYMIC;
-import static com.gmail.petrikov05.app.service.constant.ValidationRules.SIZE_MIN_FIRST_NAME;
-import static com.gmail.petrikov05.app.service.constant.ValidationRules.SIZE_MIN_LAST_NAME;
-import static com.gmail.petrikov05.app.service.constant.ValidationRules.SIZE_MIN_PATRONYMIC;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_NOT_EMPTY;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_REGEX_NAME;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_SIZE_FIRST_NAME;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_SIZE_LAST_NAME;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_SIZE_PATRONYMIC;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationRules.REGEXP_NAME;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationRules.SIZE_MAX_FIRST_NAME;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationRules.SIZE_MAX_LAST_NAME;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationRules.SIZE_MAX_PATRONYMIC;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationRules.SIZE_MIN_FIRST_NAME;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationRules.SIZE_MIN_LAST_NAME;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationRules.SIZE_MIN_PATRONYMIC;
 
 public class UpdateUserProfileDTO {
 

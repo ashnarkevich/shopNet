@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-    <title>articles</title>
+    <title>article</title>
     <th:block th:insert="skeleton/meta::head_meta"></th:block>
     <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
 </head>
@@ -15,20 +15,32 @@
 
 <div th:if="${article != null}">
     <ul th:object="${article}">
-        <li th:text="*{id}"></li>
-        <li th:text="*{date}"></li>
-        <li th:text="*{title}"></li>
-        <li th:text="*{author}"></li>
-        <li th:text="*{text}"></li>
+        <li><a th:href="@{/articles/{id}/update(id=*{id})}">update</a> </li>
+        <li>id: <span th:text="*{id}"></span></li>
+        <li>date create: <span th:text="*{dateCreate}"></span></li>
+        <li>date publication: <span th:text="${#temporals.format(article.datePublication, 'yyyy-MM-dd HH:mm')}"></span></li>
+        <li>title: <span th:text="*{title}"></span></li>
+        <li>author: <span th:text="*{author}"></span></li>
+        <li>text: <span th:text="*{text}"></span></li>
     </ul>
     <div th:if="${not #lists.isEmpty(article.comments)}">
         <ol th:each="comment : ${article.getComments()}" th:object="${comment}">
-            <li th:text="*{id}"></li>
+            <li th:text="*{commentId}"></li>
             <li th:text="*{author}"></li>
             <li th:text="*{date}"></li>
             <li th:text="*{text}"></li>
+            <li sec:authorize="hasRole('SALE_USER')">>
+                <input type="checkbox" form="form-delete-comment" th:value="*{commentId}" name="id">
+            </li>
         </ol>
     </div>
+    <th:block th:if="${comments != null}" sec:authorize="hasRole('SALE_USER')">
+        <form action="#" th:action="@{articles/{id}/comments/{commentId}/delete(id=*{id},commentId=${commentId})}"
+              method="post" id="form-delete-comment">
+            <button type="submit" form="form-delete-comment">delete selection comments</button>
+        </form>
+    </th:block>
+    <div th:unless="${not #lists.isEmpty(comments)}">Comments not found.</div>
 </div>
 
 <th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>

@@ -2,6 +2,7 @@ package com.gmail.petrikov05.app.web.constant;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public interface TestConstant {
 
@@ -26,8 +27,13 @@ public interface TestConstant {
     //    Article
     long VALID_ARTICLE_ID = 1L;
     String VALID_ARTICLE_TITLE = "Test article title";
+    String VALID_ARTICLE_NUMBER = "09354376-13f9-4e05-b550-1abdddca7bd4";
     LocalDateTime VALID_ARTICLE_DATE = LocalDateTime.of(2020, 12, 15, 00, 00, 00);
     String VALID_ARTICLE_TEXT = "This is the article text.";
+    String VALID_ARTICLE_AUTHOR = "BestLastName BestFirstName";
+    String VALID_ARTICLE_DATE_PUBLICATION_STR = "2015-02-20 06:30";
+    LocalDateTime VALID_ARTICLE_DATE_PUBLICATION =
+            LocalDateTime.parse(VALID_ARTICLE_DATE_PUBLICATION_STR, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
     //    Comment
     long VALID_COMMENT_ID = 1L;
@@ -47,9 +53,10 @@ public interface TestConstant {
     LocalDateTime VALID_ORDER_DATE = LocalDateTime.of(2020, 8, 22, 8, 25, 30);
 
     String VALID_ITEM_NAME = "testItemName";
-    String VALID_ITEM_NUMBER = "art2435";
-    int VALID_ITEM_AMOUNT = 45;
+    String VALID_ITEM_NUMBER = "09354376-13f9-4e05-b550-1abdddca7bd4";
+    String VALID_ITEM_DESCRIPTION = "Test item description";
     BigDecimal VALID_ITEM_PRICE = BigDecimal.valueOf(15.34);
+    int VALID_ITEM_AMOUNT = 45;
     BigDecimal VALID_TOTAL_PRICE = BigDecimal.valueOf(690.3);
 
 }

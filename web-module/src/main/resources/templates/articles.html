@@ -13,18 +13,42 @@
 
 <th:block th:insert="skeleton/message :: message_warning">message</th:block>
 
-<div th:if="${not #lists.isEmpty(articles)}">
-    <ul th:each="article : ${articles}" th:object="${article}">
-        <li th:text="*{id}"></li>
-        <li th:text="*{title}"></li>
-        <li th:text="*{date}"></li>
-        <li th:text="*{author}"></li>
-        <li>
-            <span th:text="*{text}"></span>
-            <a th:href="@{/articles/{id}(id=*{id})}">more</a>
-        </li>
-    </ul>
-</div>
+<div sec:authorize="hasRole('SALE_USER')"><a href="#" th:href="@{/articles/add}">add article</a></div>
+
+<th:block sec:authorize="hasRole('CUSTOMER_USER')">
+    <div th:if="${not #lists.isEmpty(articles)}">
+        <ul th:each="article : ${articles}" th:object="${article}">
+            <li th:text="*{id}"></li>
+            <li th:text="*{title}"></li>
+            <li th:text="*{dateCreate}"></li>
+            <li th:text="*{author}"></li>
+            <li>
+                <span th:text="*{text}"></span>
+                <a th:href="@{/articles/{id}(id=*{id})}">more</a>
+            </li>
+        </ul>
+    </div>
+</th:block>
+
+<th:block sec:authorize="hasRole('SALE_USER')">
+    <div th:if="${not #lists.isEmpty(articles)}">
+        <ul th:each="article : ${articles}" th:object="${article}">
+            <li th:text="*{id}"></li>
+            <li th:text="*{title}"></li>
+            <li th:text="*{dateCreate}"></li>
+            <li th:text="${#temporals.format(article.datePublication, 'yyyy-MM-dd HH:mm')}"></li>
+            <li th:text="*{author}"></li>
+            <li>
+                <span th:text="*{text}"></span>
+                <a th:href="@{/articles/{id}(id=*{id})}">more</a>
+            </li>
+            <li>
+                <a th:href="@{articles/{id}/delete(id=*{id},page=${page})}">delete</a>
+            </li>
+        </ul>
+    </div>
+</th:block>
+
 <div th:unless="${not #lists.isEmpty(articles)}">Articles not found.</div>
 
 <th:block th:insert="skeleton/link :: link_article_pagination">pagination</th:block>

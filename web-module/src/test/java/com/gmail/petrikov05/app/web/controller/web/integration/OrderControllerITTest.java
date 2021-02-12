@@ -4,12 +4,16 @@ import java.util.Locale;
 
 import com.gmail.petrikov05.app.service.model.order.OrderStatusDTOEnum;
 import com.gmail.petrikov05.app.web.constant.TestConstant;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -109,12 +113,11 @@ public class OrderControllerITTest {
     public void addOrder_returnAddedOrder() throws Exception {
         MvcResult mvcResult = mocMvc.perform(post("/orders")
                 .param("itemAmount", String.valueOf(VALID_ITEM_AMOUNT))
-                .param("itemNumber", VALID_ITEM_NUMBER.toLowerCase(Locale.ROOT))
+                .param("itemNumber", VALID_ITEM_NUMBER.toLowerCase())
         ).andExpect(status().isOk())
                 .andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
         assertThat(actualResult).contains(String.valueOf(TestConstant.VALID_ORDER_ID));
-        assertThat(actualResult).contains("1-2021");
         assertThat(actualResult).contains(String.valueOf(NEW));
         assertThat(actualResult).contains(VALID_ITEM_NAME);
         assertThat(actualResult).contains(String.valueOf(VALID_USER_ID));

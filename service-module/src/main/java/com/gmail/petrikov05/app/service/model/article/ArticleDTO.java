@@ -1,14 +1,20 @@
 package com.gmail.petrikov05.app.service.model.article;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.gmail.petrikov05.app.service.model.comment.CommentDTO;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class ArticleDTO {
 
     private Long id;
     private String title;
-    private LocalDateTime date;
+    private LocalDateTime dateCreate;
+    private LocalDateTime datePublication;
     private String author;
     private String text;
+    private List<CommentDTO> comments;
 
     public void setId(Long id) {
         this.id = id;
@@ -26,12 +32,20 @@ public class ArticleDTO {
         return title;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setDateCreate(LocalDateTime dateCreate) {
+        this.dateCreate = dateCreate;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getDateCreate() {
+        return dateCreate;
+    }
+
+    public LocalDateTime getDatePublication() {
+        return datePublication;
+    }
+
+    public void setDatePublication(LocalDateTime datePublication) {
+        this.datePublication = datePublication;
     }
 
     public void setAuthor(String author) {
@@ -48,6 +62,14 @@ public class ArticleDTO {
 
     public String getText() {
         return text;
+    }
+
+    public void setComments(List<CommentDTO> comments) {
+        this.comments = comments;
+    }
+
+    public List<CommentDTO> getComments() {
+        return comments;
     }
 
 }

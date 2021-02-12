@@ -5,7 +5,7 @@ import net.bytebuddy.utility.RandomString;
 public class PasswordUtil {
 
     public static String generatePassword() {
-        return RandomString.make(5);
+        return "admin";
     }
 
 }

@@ -6,9 +6,10 @@ import javax.validation.Valid;
 
 import com.gmail.petrikov05.app.service.ArticleService;
 import com.gmail.petrikov05.app.service.exception.AnonymousUserException;
+import com.gmail.petrikov05.app.service.exception.ObjectDBException;
 import com.gmail.petrikov05.app.service.model.article.AddArticleDTO;
 import com.gmail.petrikov05.app.service.model.article.ArticleDTO;
-import com.gmail.petrikov05.app.service.model.article.ArticleWithCommentsDTO;
+import com.gmail.petrikov05.app.service.model.article.ArticlePreviewDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +34,7 @@ public class ArticleAPIController {
     public ArticleAPIController(ArticleService articleService) {this.articleService = articleService;}
 
     @GetMapping
-    public List<ArticleDTO> getArticles() {
+    public List<ArticlePreviewDTO> getArticles() {
         return articleService.getAllArticles();
     }
 
@@ -41,8 +42,8 @@ public class ArticleAPIController {
     public Object getArticleById(
             @PathVariable Long id
     ) {
-        Optional<ArticleWithCommentsDTO> article = Optional.ofNullable(articleService.getArticleById(id));
-        if (article.isPresent()){
+        Optional<ArticleDTO> article = Optional.ofNullable(articleService.getArticleById(id));
+        if (article.isPresent()) {
             return article.get();
         }
         return MESSAGE_ARTICLE_NOT_FOUND;
@@ -60,11 +61,15 @@ public class ArticleAPIController {
     public String deleteArticleById(
             @PathVariable Long id
     ) {
-        boolean isDeleted = articleService.deleteById(id);
-        if (isDeleted) {
-            return MESSAGE_ARTICLE_DELETED;
-        } else {
-            return MESSAGE_ARTICLE_DELETED_FAIL;
+        try {
+            boolean isDeleted = articleService.deleteById(id);
+            if (isDeleted) {
+                return MESSAGE_ARTICLE_DELETED;
+            } else {
+                return MESSAGE_ARTICLE_DELETED_FAIL;
+            }
+        } catch (ObjectDBException e) {
+            return e.getMessage();
         }
     }
 

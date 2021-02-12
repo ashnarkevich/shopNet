@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>add article</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/style::main_css-link"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<div>Add a article.</div>
+<th:block th:insert="skeleton/link::link_main_page"></th:block>
+
+<div>
+    <form  action="#" th:action="@{/articles}" method="post" th:object="${article}">
+        <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">error</div>
+        <label>title:
+            <input type="text" name="title" th:value="*{title}">
+        </label>
+        <div th:if="${#fields.hasErrors('datePublication')}" th:errors="*{datePublication}">error</div>
+        <label>Date publication:
+            <input type="text" name="datePublication" th:value="*{datePublication}">
+        </label>
+        <div th:if="${#fields.hasErrors('text')}" th:errors="${article.text}"></div>
+        <label>text:
+            <input type="text" name="text" th:value="*{text}">
+        </label>
+        <button type="submit">add</button>
+    </form>
+</div>
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>

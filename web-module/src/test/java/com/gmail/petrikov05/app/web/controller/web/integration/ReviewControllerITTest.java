@@ -57,13 +57,13 @@ class ReviewControllerITTest {
     }
 
     @Test
-    @WithMockUser(username = "best@best.com", roles = "SALE_USER")
-    public void addReview_returnStatusOk() throws Exception {
+    @WithMockUser(username = "test@test.test", roles = "CUSTOMER_USER")
+    public void addReview_redirectIndexWithMessage() throws Exception {
         mockMvc.perform(
                 post("/reviews/add")
                         .param("text", VALID_REVIEW_TEXT)
         ).andExpect(status().is3xxRedirection())
-                .andExpect(flash().attribute("message", "BestLastName BestFirstName Your review was send."));
+                .andExpect(flash().attribute("message", "TestLastName TestFirstName Your review was send."));
     }
 
 }

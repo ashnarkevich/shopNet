@@ -1,10 +1,9 @@
 package com.gmail.petrikov05.app.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import javax.persistence.NoResultException;
 
 import com.gmail.petrikov05.app.repository.ItemRepository;
 import com.gmail.petrikov05.app.repository.OrderRepository;
@@ -24,6 +23,7 @@ import com.gmail.petrikov05.app.service.model.order.OrderDetailsDTO;
 import com.gmail.petrikov05.app.service.model.order.OrderStatusDTOEnum;
 import com.gmail.petrikov05.app.service.model.order.UpdateOrderDTO;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -32,6 +32,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import static com.gmail.petrikov05.app.repository.model.constant.UserRoleEnum.ADMINISTRATOR;
 import static com.gmail.petrikov05.app.repository.model.constant.UserRoleEnum.CUSTOMER_USER;
+import static com.gmail.petrikov05.app.repository.model.constant.UserRoleEnum.SALE_USER;
 import static com.gmail.petrikov05.app.service.constant.MessageConstant.MESSAGE_ITEM_NOT_FOUND;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_COUNT_OF_ENTITIES;
 import static com.gmail.petrikov05.app.service.constant.TestConstant.VALID_EMAIL;
@@ -79,13 +80,15 @@ class OrderServiceTest {
 
     /* get orders by page with pagination */
     @Test
-    public void getOrdersByPage_returnValidOrders() throws AnonymousUserException {
+    public void getOrdersByPageBySaleUser_returnValidOrders() throws AnonymousUserException {
         User returnedUser = getValidUser();
+        returnedUser.setRole(SALE_USER);
         when(userService.getCurrentUser()).thenReturn(returnedUser);
         List<Order> returnedOrders = getValidOrders();
+        when(orderRepository.getCountOfEntities()).thenReturn(VALID_COUNT_OF_ENTITIES);
         when(orderRepository.getOrdersByPage(VALID_START_POSITION, VALID_OBJECT_BY_PAGE)).thenReturn(returnedOrders);
         PaginationWithEntitiesDTO<OrderDTO> actualResult = orderService.getOrdersByPage(VALID_PAGE);
-        verify(orderRepository, times(1)).getOrdersByPage(anyInt(), anyInt());
+        verify(orderRepository, times(1)).getOrdersByPage(VALID_START_POSITION, VALID_OBJECT_BY_PAGE);
         assertThat(actualResult.getEntities()).isNotNull();
         assertThat(actualResult.getEntities().get(0).getId()).isEqualTo(VALID_ORDER_ID);
         assertThat(actualResult.getEntities().get(0).getNumber()).isEqualTo(VALID_ORDER_NUMBER);
@@ -172,8 +175,8 @@ class OrderServiceTest {
         AddOrderDTO addOrderDTO = getValidAddOrderDTO();
         User returnedUser = getValidUser();
         when(userService.getCurrentUser()).thenReturn(returnedUser);
-        Item returnedItem = getValidItem();
-        when(itemRepository.getItemsByNumber(any())).thenReturn(returnedItem);
+        Optional<Item> returnedItem = Optional.of(getValidItem());
+        when(itemRepository.getItemByNumber(any())).thenReturn(returnedItem);
         Order returnedOrder = getValidOrder();
         when(orderRepository.add(any())).thenReturn(returnedOrder);
         OrderDetailsDTO actualResult = orderService.addOrder(addOrderDTO);
@@ -189,25 +192,25 @@ class OrderServiceTest {
 
     @Test
     public void addOrder_callLogic() throws AnonymousUserException, ObjectDBException, UserInformationException {
-        Item returnedItem = getValidItem();
+        Optional<Item> returnedItem = Optional.of(getValidItem());
         User returnedUser = getValidUser();
         when(userService.getCurrentUser()).thenReturn(returnedUser);
-        when(itemRepository.getItemsByNumber(any())).thenReturn(returnedItem);
+        when(itemRepository.getItemByNumber(any())).thenReturn(returnedItem);
         Order returnedOrder = getValidOrder();
         when(orderRepository.add(any())).thenReturn(returnedOrder);
         AddOrderDTO addOrderDTO = getValidAddOrderDTO();
         orderService.addOrder(addOrderDTO);
         verify(userService, times(1)).getCurrentUser();
-        verify(itemRepository, times(1)).getItemsByNumber(anyString());
+        verify(itemRepository, times(1)).getItemByNumber(anyString());
         verify(orderRepository, times(1)).add(any());
     }
 
     @Test
-    public void addOrderWithNonExistentItem_returnObjectDBException() throws AnonymousUserException, ObjectDBException {
+    public void addOrderWithNonExistentItem_returnObjectDBException() throws AnonymousUserException {
         AddOrderDTO addOrderDTO = getValidAddOrderDTO();
         User returnedUser = getValidUser();
         when(userService.getCurrentUser()).thenReturn(returnedUser);
-        when(itemRepository.getItemsByNumber(anyString())).thenReturn(null);
+        when(itemRepository.getItemByNumber(anyString())).thenReturn(Optional.empty());
         assertThatExceptionOfType(ObjectDBException.class)
                 .isThrownBy(() -> orderService.addOrder(addOrderDTO));
         assertThrows(
@@ -261,7 +264,7 @@ class OrderServiceTest {
 
     /* get all orders */
     @Test
-    public void getAllOrders_returnOrderDTOS(){
+    public void getAllOrders_returnOrderDTOS() {
         List<Order> returnedOrders = getValidOrders();
         when(orderRepository.getAllObjects()).thenReturn(returnedOrders);
         List<OrderDTO> actualResult = orderService.getAllOrders();
@@ -278,11 +281,11 @@ class OrderServiceTest {
 
     /* get order by id */
     @Test
-    public void getOrderById_returnOrderDTO(){
+    public void getOrderById_returnOrderDTO() {
         Order returnedOrder = getValidOrder();
         when(orderRepository.getObjectByID(anyLong())).thenReturn(returnedOrder);
         OrderDetailsDTO actualResult = orderService.getOrderById(VALID_ORDER_ID);
-        verify(orderRepository,times(1)).getObjectByID(anyLong());
+        verify(orderRepository, times(1)).getObjectByID(anyLong());
         assertThat(actualResult).isNotNull();
         assertThat(actualResult.getNumber()).isEqualTo(VALID_ORDER_NUMBER);
         assertThat(actualResult.getStatus().name()).isEqualTo(VALID_ORDER_STATUS);

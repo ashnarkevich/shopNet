@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>update article</title>
+    <th:block th:insert="skeleton/meta::head_meta"></th:block>
+    <th:block th:insert="skeleton/style::main_css-link"></th:block>
+    <th:block th:insert="skeleton/bootstrap::botstrap_css-link"></th:block>
+</head>
+<body>
+<div>update article</div>
+
+<div th:insert="skeleton/link :: link_main_page"></div>
+<div th:insert="skeleton/message :: message_warning"></div>
+
+<div>
+    <form th:action="@{/articles/{id}/update(id=${id})}" method="post" th:object="${article}">
+        <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">error</div>
+        <label>title:
+            <input type="text" name="title" th:value="*{title}">
+        </label>
+        <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}">error</div>
+        <label>text:
+            <input type="text" name="text" th:value="*{text}">
+        </label>
+        <div th:if="${#fields.hasErrors('datePublication')}" th:errors="*{datePublication}">error</div>
+        <label>date publication:
+            <input type="text" name="datePublication"
+                   th:value="${#temporals.format(article.datePublication, 'yyyy-MM-dd HH:mm')}">
+        </label>
+        <br/>
+        <input type="submit" value="update profile">
+    </form>
+</div>
+
+<th:block th:insert="skeleton/bootstrap::bootstrap_js-link"></th:block>
+</body>
+</html>

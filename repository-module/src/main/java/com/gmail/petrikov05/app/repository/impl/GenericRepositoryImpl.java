@@ -4,7 +4,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -36,13 +35,19 @@ public abstract class GenericRepositoryImpl<L, T> implements GenericRepository<L
 
     @Override
     public boolean delete(T t) {
-        entityManager.remove(t);
-        return true;
+        try {
+            entityManager.remove(t);
+            return true;
+        } catch (IllegalArgumentException e) {
+            logger.info(e.getMessage());
+            return false;
+        }
     }
 
     @Override
-    public void merge(T t) {
+    public T merge(T t) {
         entityManager.merge(t);
+        return t;
     }
 
     @Override
@@ -53,12 +58,7 @@ public abstract class GenericRepositoryImpl<L, T> implements GenericRepository<L
 
     @Override
     public T getObjectByID(L id) {
-        try {
-            return entityManager.find(entityClass, id);
-        } catch (NoResultException e) {
-            logger.info("order with id = " + id + " not found");
-            return null;
-        }
+        return entityManager.find(entityClass, id);
     }
 
     @Override
