@@ -14,7 +14,7 @@ INSERT INTO review (text, date_create, is_active, author_id)
 VALUES ('This is the review text.', '2020-05-03', 1, 2);
 
 INSERT INTO article (title, date_create, date_publication, text, author_id)
-VALUES ('Test article title', '2020-12-15', '2015-02-20 06:30', 'This is the article text.', 2);
+VALUES ('Test article title', '2020-12-15', '2031-02-20 06:30', 'This is the article text.', 2);
 
 INSERT INTO comment (date, text, article_id, author_id)
 VALUES ('2020-8-30 21:23:34', 'This is the comment text.', 1, 3);

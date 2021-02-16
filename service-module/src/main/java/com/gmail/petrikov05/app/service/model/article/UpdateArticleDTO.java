@@ -2,8 +2,12 @@ package com.gmail.petrikov05.app.service.model.article;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationMessage.MESSAGE_SIZE_ARTICLE_TEXT;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationMessage.MESSAGE_SIZE_ARTICLE_TITLE;
@@ -12,7 +16,9 @@ import static com.gmail.petrikov05.app.service.constant.validation.ArticleValida
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationRules.SIZE_MAX_ARTICLE_TITLE;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationRules.SIZE_MIN_ARTICLE_TEXT;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationRules.SIZE_MIN_ARTICLE_TITLE;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_DATE_PUBLICATION_BEFORE;
 import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_NOT_EMPTY;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 public class UpdateArticleDTO {
 
@@ -26,6 +32,9 @@ public class UpdateArticleDTO {
             max = SIZE_MAX_ARTICLE_TEXT,
             message = MESSAGE_SIZE_ARTICLE_TEXT)
     private String text;
+    @NotNull(message = MESSAGE_NOT_EMPTY)
+    @DateTimeFormat(iso = DATE_TIME)
+    @FutureOrPresent(message = MESSAGE_DATE_PUBLICATION_BEFORE)
     private LocalDateTime datePublication;
 
     public String getTitle() {

@@ -3,6 +3,7 @@ package com.gmail.petrikov05.app.web;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 @SpringBootApplication(

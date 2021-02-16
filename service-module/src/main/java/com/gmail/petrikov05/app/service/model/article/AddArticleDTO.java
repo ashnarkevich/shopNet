@@ -1,6 +1,7 @@
 package com.gmail.petrikov05.app.service.model.article;
 
 import java.time.LocalDateTime;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,7 +14,9 @@ import static com.gmail.petrikov05.app.service.constant.validation.ArticleValida
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationRules.SIZE_MAX_ARTICLE_TITLE;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationRules.SIZE_MIN_ARTICLE_TEXT;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationRules.SIZE_MIN_ARTICLE_TITLE;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_DATE_PUBLICATION_BEFORE;
 import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_NOT_EMPTY;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 public class AddArticleDTO {
 
@@ -30,7 +33,8 @@ public class AddArticleDTO {
     private String text;
 
     @NotNull(message = MESSAGE_NOT_EMPTY)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @DateTimeFormat(iso = DATE_TIME)
+    @FutureOrPresent(message = MESSAGE_DATE_PUBLICATION_BEFORE)
     LocalDateTime datePublication;
 
     public void setTitle(String title) {

@@ -31,9 +31,9 @@ public interface TestConstant {
     LocalDateTime VALID_ARTICLE_DATE = LocalDateTime.of(2020, 12, 15, 00, 00, 00);
     String VALID_ARTICLE_TEXT = "This is the article text.";
     String VALID_ARTICLE_AUTHOR = "BestLastName BestFirstName";
-    String VALID_ARTICLE_DATE_PUBLICATION_STR = "2015-02-20 06:30";
+    String VALID_ARTICLE_DATE_PUBLICATION_STR = "2031-02-20T06:30";
     LocalDateTime VALID_ARTICLE_DATE_PUBLICATION =
-            LocalDateTime.parse(VALID_ARTICLE_DATE_PUBLICATION_STR, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            LocalDateTime.parse(VALID_ARTICLE_DATE_PUBLICATION_STR, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
 
     //    Comment
     long VALID_COMMENT_ID = 1L;

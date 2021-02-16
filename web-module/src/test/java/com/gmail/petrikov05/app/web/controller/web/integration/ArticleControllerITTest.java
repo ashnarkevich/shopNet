@@ -1,5 +1,7 @@
 package com.gmail.petrikov05.app.web.controller.web.integration;
 
+import java.time.format.DateTimeFormatter;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_ARTICLE_DELETED;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_COMMENT_DELETED;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_AUTHOR;
+import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_DATE_PUBLICATION;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_DATE_PUBLICATION_STR;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_ID;
 import static com.gmail.petrikov05.app.web.constant.TestConstant.VALID_ARTICLE_NUMBER;
@@ -51,7 +54,7 @@ class ArticleControllerITTest {
         String actualResult = mvcResult.getResponse().getContentAsString();
         assertThat(actualResult).contains(String.valueOf(VALID_ARTICLE_ID));
         assertThat(actualResult).contains(VALID_ARTICLE_TITLE);
-        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION_STR);
+        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         assertThat(actualResult).contains(VALID_AUTHOR);
         assertThat(actualResult).contains(VALID_ARTICLE_TEXT);
         assertThat(actualResult).contains("more");
@@ -67,7 +70,7 @@ class ArticleControllerITTest {
                 .andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
         assertThat(actualResult).contains(VALID_ARTICLE_TITLE);
-        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION_STR);
+        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         assertThat(actualResult).contains(VALID_AUTHOR);
         assertThat(actualResult).contains(VALID_ARTICLE_TEXT);
         assertThat(actualResult).contains(String.valueOf(VALID_COMMENT_ID));
@@ -88,7 +91,7 @@ class ArticleControllerITTest {
         String actualResult = mvcResult.getResponse().getContentAsString();
         assertThat(actualResult).contains(VALID_ARTICLE_TITLE);
         assertThat(actualResult).contains(VALID_ARTICLE_TEXT);
-        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION_STR);
+        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         assertThat(actualResult).contains(VALID_ARTICLE_AUTHOR);
     }
 
@@ -118,7 +121,7 @@ class ArticleControllerITTest {
         assertThat(actualResult).contains(String.valueOf(VALID_ARTICLE_ID));
         assertThat(actualResult).contains(VALID_ARTICLE_TITLE);
         assertThat(actualResult).contains(VALID_ARTICLE_TEXT);
-        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION_STR);
+        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
     }
 
     @Test
@@ -127,12 +130,13 @@ class ArticleControllerITTest {
                 post("/articles/" + VALID_ARTICLE_ID + "/update")
                         .param("title", "new title")
                         .param("text", "new text")
+                        .param("datePublication", "2025-09-25T12:35")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
         assertThat(actualResult).contains(String.valueOf(VALID_ARTICLE_ID));
         assertThat(actualResult).contains("new title");
         assertThat(actualResult).contains("new text");
-        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION_STR);
+        assertThat(actualResult).contains("2025-09-25 12:35");
     }
 
 }

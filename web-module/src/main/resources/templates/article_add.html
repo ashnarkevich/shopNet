@@ -18,7 +18,7 @@
         </label>
         <div th:if="${#fields.hasErrors('datePublication')}" th:errors="*{datePublication}">error</div>
         <label>Date publication:
-            <input type="text" name="datePublication" th:value="*{datePublication}">
+            <input type="datetime-local" name="datePublication" th:value="*{datePublication}">
         </label>
         <div th:if="${#fields.hasErrors('text')}" th:errors="${article.text}"></div>
         <label>text:

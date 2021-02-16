@@ -1,5 +1,6 @@
 package com.gmail.petrikov05.app.web.controller.web;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationMessage.MESSAGE_SIZE_ARTICLE_TEXT;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationMessage.MESSAGE_SIZE_ARTICLE_TITLE;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationMessage.MESSAGE_TITLE_NOT_EMPTY;
+import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_DATE_PUBLICATION_BEFORE;
 import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_NOT_EMPTY;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_ARTICLE_DELETED;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_ARTICLE_DELETED_FAIL;
@@ -416,13 +418,33 @@ class ArticleControllerTest {
     }
 
     @Test
-    public void addArticleWithInvalidDatePublication_returnOkWithErrorMessage() throws Exception {
+    public void addArticleWithEmptyDatePublication_returnOkWithErrorMessage() throws Exception {
         mockMvc.perform(
                 post("/articles")
                         .param("title", VALID_ARTICLE_TITLE)
                         .param("text", VALID_ARTICLE_TEXT)
                         .param("datePublication", " ")
         ).andExpect(content().string(containsString(MESSAGE_NOT_EMPTY)));
+    }
+
+    @Test
+    public void addArticleWithBeforeDatePublication_returnOkWithErrorMessage() throws Exception {
+        mockMvc.perform(
+                post("/articles")
+                        .param("title", VALID_ARTICLE_TITLE)
+                        .param("text", VALID_ARTICLE_TEXT)
+                        .param("datePublication", "1900-03-04T23:15")
+        ).andExpect(content().string(containsString(MESSAGE_DATE_PUBLICATION_BEFORE)));
+    }
+
+    @Test
+    public void addArticleWithInvalidDatePublication_returnOkWithErrorMessage() throws Exception {
+        mockMvc.perform(
+                post("/articles")
+                        .param("title", VALID_ARTICLE_TITLE)
+                        .param("text", VALID_ARTICLE_TEXT)
+                        .param("datePublication", "03-04-2021 23-34")
+        ).andExpect(content().string(containsString("Please use yyyy-mm-ddThh:mm format")));
     }
 
     @Test
@@ -489,7 +511,7 @@ class ArticleControllerTest {
                         .param("datePublication", VALID_ARTICLE_DATE_PUBLICATION_STR)
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION_STR);
+        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
     }
 
     @Test
@@ -697,7 +719,7 @@ class ArticleControllerTest {
         MvcResult mvcResult = mockMvc.perform(get("/articles/" + VALID_ARTICLE_ID + "/update")
         ).andReturn();
         String actualResult = mvcResult.getResponse().getContentAsString();
-        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION_STR);
+        assertThat(actualResult).contains(VALID_ARTICLE_DATE_PUBLICATION.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
     }
     /* finish show update article page */
 
@@ -707,6 +729,7 @@ class ArticleControllerTest {
         mockMvc.perform(post("/articles/" + VALID_ARTICLE_ID + "/update")
                 .param("title", VALID_ARTICLE_TITLE)
                 .param("text", VALID_ARTICLE_TEXT)
+                .param("datePublication", VALID_ARTICLE_DATE_PUBLICATION_STR)
         ).andExpect(status().isOk())
                 .andExpect(view().name("article"));
     }
@@ -775,6 +798,38 @@ class ArticleControllerTest {
     }
 
     @Test
+    public void updateArticleWithEmptyDatePublication_returnArticleUpdatePage() throws Exception {
+        mockMvc.perform(post("/articles/" + VALID_ARTICLE_ID + "/update")
+                .param("title", VALID_ARTICLE_TITLE)
+                .param("text", VALID_ARTICLE_TEXT)
+        ).andExpect(status().isOk())
+                .andExpect(view().name("article_update"))
+                .andExpect(content().string(containsString(MESSAGE_NOT_EMPTY)));
+    }
+
+    @Test
+    public void updateArticleWithInvalidFormatDatePublication_returnArticleUpdatePage() throws Exception {
+        mockMvc.perform(post("/articles/" + VALID_ARTICLE_ID + "/update")
+                .param("title", VALID_ARTICLE_TITLE)
+                .param("text", VALID_ARTICLE_TEXT)
+                .param("datePublication", "22-03-2031T14:20")
+        ).andExpect(status().isOk())
+                .andExpect(view().name("article_update"))
+                .andExpect(content().string(containsString("Please use yyyy-mm-ddThh:mm format")));
+    }
+
+    @Test
+    public void updateArticleWithBeforeDatePublication_returnArticleUpdatePage() throws Exception {
+        mockMvc.perform(post("/articles/" + VALID_ARTICLE_ID + "/update")
+                .param("title", VALID_ARTICLE_TITLE)
+                .param("text", VALID_ARTICLE_TEXT)
+                .param("datePublication", "2010-05-31T14:20")
+        ).andExpect(status().isOk())
+                .andExpect(view().name("article_update"))
+                .andExpect(content().string(containsString(MESSAGE_DATE_PUBLICATION_BEFORE)));
+    }
+
+    @Test
     public void updateArticle_callBusinessLogic() throws Exception, ObjectDBException {
         UpdateArticleDTO updateArticle = new UpdateArticleDTO();
         ArticleDTO returnedArticle = getValidArticleDTO();
@@ -782,6 +837,7 @@ class ArticleControllerTest {
         mockMvc.perform(post("/articles/" + VALID_ARTICLE_ID + "/update")
                 .param("title", VALID_ARTICLE_TITLE)
                 .param("text", VALID_ARTICLE_TEXT)
+                .param("datePublication", VALID_ARTICLE_DATE_PUBLICATION_STR)
         ).andExpect(status().isOk());
         verify(articleService, times(1)).updateArticle(anyLong(), any());
     }
@@ -793,7 +849,9 @@ class ArticleControllerTest {
         mockMvc.perform(post("/articles/" + VALID_ARTICLE_ID + "/update")
                 .param("title", VALID_ARTICLE_TITLE)
                 .param("text", VALID_ARTICLE_TEXT)
-        ).andExpect(model().attributeExists("article"));
+                .param("datePublication", VALID_ARTICLE_DATE_PUBLICATION_STR)
+        ).andExpect(view().name("article"))
+                .andExpect(model().attributeExists("article"));
     }
 
     @Test
@@ -803,7 +861,9 @@ class ArticleControllerTest {
         mockMvc.perform(post("/articles/" + VALID_ARTICLE_ID + "/update")
                 .param("title", VALID_ARTICLE_TITLE)
                 .param("text", VALID_ARTICLE_TEXT)
-        ).andExpect(content().string(containsString(String.valueOf(VALID_ARTICLE_ID))));
+                .param("datePublication", VALID_ARTICLE_DATE_PUBLICATION_STR)
+        ).andExpect(view().name("article"))
+                .andExpect(content().string(containsString(String.valueOf(VALID_ARTICLE_ID))));
     }
 
     @Test
@@ -813,7 +873,9 @@ class ArticleControllerTest {
         mockMvc.perform(post("/articles/" + VALID_ARTICLE_ID + "/update")
                 .param("title", VALID_ARTICLE_TITLE)
                 .param("text", VALID_ARTICLE_TEXT)
-        ).andExpect(content().string(containsString(VALID_ARTICLE_TITLE)));
+                .param("datePublication", VALID_ARTICLE_DATE_PUBLICATION_STR)
+        ).andExpect(view().name("article"))
+                .andExpect(content().string(containsString(VALID_ARTICLE_TITLE)));
     }
 
     @Test
@@ -823,7 +885,9 @@ class ArticleControllerTest {
         mockMvc.perform(post("/articles/" + VALID_ARTICLE_ID + "/update")
                 .param("title", VALID_ARTICLE_TITLE)
                 .param("text", VALID_ARTICLE_TEXT)
-        ).andExpect(content().string(containsString(VALID_ARTICLE_TEXT)));
+                .param("datePublication", VALID_ARTICLE_DATE_PUBLICATION_STR)
+        ).andExpect(view().name("article"))
+                .andExpect(content().string(containsString(VALID_ARTICLE_TEXT)));
     }
 
     @Test
@@ -833,7 +897,9 @@ class ArticleControllerTest {
         mockMvc.perform(post("/articles/" + VALID_ARTICLE_ID + "/update")
                 .param("title", VALID_ARTICLE_TITLE)
                 .param("text", VALID_ARTICLE_TEXT)
-        ).andExpect(content().string(containsString(VALID_ARTICLE_TEXT)));
+                .param("datePublication", VALID_ARTICLE_DATE_PUBLICATION_STR)
+        ).andExpect(view().name("article"))
+                .andExpect(content().string(containsString(VALID_ARTICLE_TEXT)));
     }
 
     @Test
@@ -842,6 +908,7 @@ class ArticleControllerTest {
         mockMvc.perform(post("/articles/12/update")
                 .param("title", VALID_ARTICLE_TITLE)
                 .param("text", VALID_ARTICLE_TEXT)
+                .param("datePublication", VALID_ARTICLE_DATE_PUBLICATION_STR)
         ).andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/articles"))
                 .andExpect(flash().attribute("error", "article not found"));

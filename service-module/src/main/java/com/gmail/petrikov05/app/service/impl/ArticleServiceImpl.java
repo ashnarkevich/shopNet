@@ -104,8 +104,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public ArticleDTO updateArticle(Long id, UpdateArticleDTO articleDTO) throws ObjectDBException {
         Article article = getArticleForUpdate(id, articleDTO);
-        Article updatedArticle = articleRepository.merge(article);
-        return convertObjectToDTO(updatedArticle);
+        return convertObjectToDTO(article);
     }
 
     private Article getArticleForUpdate(Long id, UpdateArticleDTO articleDTO) throws ObjectDBException {
@@ -116,7 +115,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
         article.setTitle(articleDTO.getTitle());
         article.setText(articleDTO.getText());
-        article.setDatePublication(article.getDatePublication());
+        article.setDatePublication(articleDTO.getDatePublication());
         return article;
     }
 

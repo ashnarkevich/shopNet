@@ -251,34 +251,33 @@ class ArticleServiceTest {
         UpdateArticleDTO updateArticleDTO = getValidUpdateArticleDTO();
         Article returnedArticle = getValidArticle();
         when(articleRepository.getObjectByID(any())).thenReturn(returnedArticle);
-        when(articleRepository.merge(any())).thenReturn(returnedArticle);
         ArticleDTO actualResult = articlesService.updateArticle(VALID_ID, updateArticleDTO);
         verify(articleRepository, times(1)).getObjectByID(anyLong());
-        verify(articleRepository, times(1)).merge(any());
         assertThat(actualResult).isNotNull();
     }
+
     @Test
     public void updateArticle_returnValidUpdatedArticle() throws ObjectDBException {
         String newTitle = "new title";
         String newText = "new text";
+        LocalDateTime newDatePublication = LocalDateTime.now();
         UpdateArticleDTO updateArticleDTO = getValidUpdateArticleDTO();
         updateArticleDTO.setTitle(newTitle);
         updateArticleDTO.setText(newText);
+        updateArticleDTO.setDatePublication(newDatePublication);
         Article returnedArticle = getValidArticle();
         when(articleRepository.getObjectByID(any())).thenReturn(returnedArticle);
-        when(articleRepository.merge(any())).thenReturn(returnedArticle);
         ArticleDTO actualResult = articlesService.updateArticle(VALID_ID, updateArticleDTO);
         assertThat(actualResult.getId()).isEqualTo(VALID_ID);
         assertThat(actualResult.getTitle()).isEqualTo(newTitle);
         assertThat(actualResult.getText()).isEqualTo(newText);
-        assertThat(actualResult.getDatePublication()).isEqualTo(VALID_ARTICLE_DATE_PUBLICATION);
+        assertThat(actualResult.getDatePublication()).isEqualTo(newDatePublication);
         assertThat(actualResult.getAuthor()).isEqualTo(VALID_AUTHOR);
     }
 
     @Test
     public void updateNonExistentArticle_returnObjectDBException() {
         when(articleRepository.getObjectByID(VALID_ID)).thenReturn(null);
-        UpdateArticleDTO updateArticleDTO = getValidUpdateArticleDTO();
         assertThatExceptionOfType(ObjectDBException.class)
                 .isThrownBy(() -> articlesService.updateArticle(VALID_ID, any()));
         assertThrows(ObjectDBException.class,
