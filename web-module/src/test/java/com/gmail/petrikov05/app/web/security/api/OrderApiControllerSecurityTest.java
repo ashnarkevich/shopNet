@@ -1,4 +1,4 @@
-package com.gmail.petrikov05.app.web.controller.security.api;
+package com.gmail.petrikov05.app.web.security.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,23 +35,23 @@ class OrderApiControllerSecurityTest {
 
     @Test
     @WithMockUser(roles = "CUSTOMER_USER")
-    public void getOrdersLikeCustomerUser_returnStatusOk() throws Exception {
+    public void getOrdersLikeCustomerUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/orders")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "ADMINISTRATOR")
-    public void getOrdersLikeAdministratorUser_returnStatusRedirect() throws Exception {
+    public void getOrdersLikeAdministratorUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/orders")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "SALE_USER")
-    public void getOrdersLikeSaleUser_returnStatusRedirect() throws Exception {
+    public void getOrdersLikeSaleUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/orders")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     /* get "/orders/{number}" */
@@ -70,23 +70,23 @@ class OrderApiControllerSecurityTest {
 
     @Test
     @WithMockUser(roles = "ADMINISTRATOR")
-    public void getOrderByNumberLikeAdministratorUser_returnStatusRedirect() throws Exception {
+    public void getOrderByNumberLikeAdministratorUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/orders/1")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "SALE_USER")
-    public void getOrderByNumberLikeSaleUser_returnStatusRedirect() throws Exception {
+    public void getOrderByNumberLikeSaleUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/orders/1")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "CUSTOMER_USER")
-    public void getOrderByNumberLikeCustomerUser_returnStatusRedirect() throws Exception {
+    public void getOrderByNumberLikeCustomerUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/orders/1")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
 }

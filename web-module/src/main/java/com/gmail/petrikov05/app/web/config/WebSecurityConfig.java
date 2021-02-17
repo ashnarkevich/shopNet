@@ -1,8 +1,9 @@
 package com.gmail.petrikov05.app.web.config;
 
-import com.gmail.petrikov05.app.web.controller.security.LoginAccessDeniedHandler;
+import com.gmail.petrikov05.app.web.security.LoginAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,15 +15,15 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import static com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum.ADMINISTRATOR;
 import static com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum.CUSTOMER_USER;
 import static com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum.SALE_USER;
-import static com.gmail.petrikov05.app.service.model.user.UserRoleDTOEnum.SECURE_API_USER;
 
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(2)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(
+    public WebSecurityConfig(
             UserDetailsService userDetailsService,
             PasswordEncoder passwordEncoder
     ) {
@@ -41,13 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic()
-                .and()
+        http
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").not().fullyAuthenticated()
-                // api
-                .antMatchers("/api/**").hasRole(SECURE_API_USER.name())
                 // articles
                 .antMatchers(HttpMethod.GET, "/articles").hasAnyRole(CUSTOMER_USER.name(), SALE_USER.name())
                 .antMatchers(HttpMethod.POST, "/articles").hasRole(SALE_USER.name())
@@ -85,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/users/*/updatePass").hasRole(ADMINISTRATOR.name())
                 .antMatchers(HttpMethod.GET, "/users/add").hasRole(ADMINISTRATOR.name())
                 .antMatchers(HttpMethod.POST, "/users/add").hasRole(ADMINISTRATOR.name())
-//                .anyRequest().authenticated()
+                //                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -93,6 +91,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().permitAll().logoutSuccessUrl("/")
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler())
+                .and()
+                .httpBasic()
                 .and()
                 .csrf().disable();
     }

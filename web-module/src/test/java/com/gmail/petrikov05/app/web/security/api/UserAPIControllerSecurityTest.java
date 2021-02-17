@@ -1,4 +1,4 @@
-package com.gmail.petrikov05.app.web.controller.security.api;
+package com.gmail.petrikov05.app.web.security.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.petrikov05.app.service.model.user.AddUserDTO;
@@ -50,26 +50,23 @@ class UserAPIControllerSecurityTest {
 
     @Test
     @WithMockUser(roles = "ADMINISTRATOR")
-    public void addUserLikeAdministratorUser_returnStatusRedirect() throws Exception {
+    public void addUserLikeAdministratorUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(post("/api/users")
-        ).andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/403"));
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "SALE_USER")
-    public void addUserLikeSaleUser_returnStatusRedirect() throws Exception {
+    public void addUserLikeSaleUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(post("/api/users")
-        ).andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/403"));
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "CUSTOMER_USER")
-    public void addUserLikeCustomerUser_returnStatusRedirect() throws Exception {
+    public void addUserLikeCustomerUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(post("/api/users")
-        ).andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/403"));
+        ).andExpect(status().isForbidden());
     }
 
     private AddUserDTO getValidAddUserDTO() {

@@ -1,4 +1,4 @@
-package com.gmail.petrikov05.app.web.controller.security.web;
+package com.gmail.petrikov05.app.web.security.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

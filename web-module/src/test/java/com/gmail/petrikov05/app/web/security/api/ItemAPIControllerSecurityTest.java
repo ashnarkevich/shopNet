@@ -1,4 +1,4 @@
-package com.gmail.petrikov05.app.web.controller.security.api;
+package com.gmail.petrikov05.app.web.security.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.petrikov05.app.service.model.item.AddItemDTO;
@@ -45,23 +45,23 @@ class ItemAPIControllerSecurityTest {
 
     @Test
     @WithMockUser(roles = "ADMINISTRATOR")
-    public void getItemsLikeAdministratorUser_returnStatusRedirect() throws Exception {
+    public void getItemsLikeAdministratorUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/items")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "SALE_USER")
-    public void getItemsLikeSaleUser_returnStatusRedirect() throws Exception {
+    public void getItemsLikeSaleUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/items")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "CUSTOMER_USER")
-    public void getItemsLikeCustomerUser_returnStatusRedirect() throws Exception {
+    public void getItemsLikeCustomerUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/items")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     /* post "/api/items */
@@ -84,23 +84,23 @@ class ItemAPIControllerSecurityTest {
 
     @Test
     @WithMockUser(roles = "ADMINISTRATOR")
-    public void addItemLikeAdministratorUser_returnStatusRedirect() throws Exception {
+    public void addItemLikeAdministratorUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(post("/api/items")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "SALE_USER")
-    public void addItemLikeSaleUser_returnStatusRedirect() throws Exception {
+    public void addItemLikeSaleUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(post("/api/items")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "CUSTOMER_USER")
-    public void addItemLikeCustomerUser_returnStatusRedirect() throws Exception {
+    public void addItemLikeCustomerUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(post("/api/items")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     /* get "/api/items/{id}" */
@@ -119,23 +119,23 @@ class ItemAPIControllerSecurityTest {
 
     @Test
     @WithMockUser(roles = "ADMINISTRATOR")
-    public void getItemLikeAdministratorUser_returnStatusRedirect() throws Exception {
+    public void getItemLikeAdministratorUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/items/1")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "SALE_USER")
-    public void getItemLikeSaleUser_returnStatusRedirect() throws Exception {
+    public void getItemLikeSaleUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/items/1")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "CUSTOMER_USER")
-    public void getItemLikeCustomerUser_returnStatusRedirect() throws Exception {
+    public void getItemLikeCustomerUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/items/1")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     /* delete "/api/items/{id}" */
@@ -154,23 +154,23 @@ class ItemAPIControllerSecurityTest {
 
     @Test
     @WithMockUser(roles = "ADMINISTRATOR")
-    public void deleteItemLikeAdministratorUser_returnStatusRedirect() throws Exception {
+    public void deleteItemLikeAdministratorUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/items/1")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "SALE_USER")
-    public void deleteItemLikeSaleUser_returnStatusRedirect() throws Exception {
+    public void deleteItemLikeSaleUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/items/1")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "CUSTOMER_USER")
-    public void deleteItemLikeCustomerUser_returnStatusRedirect() throws Exception {
+    public void deleteItemLikeCustomerUser_returnStatusForbidden() throws Exception {
         mockMvc.perform(get("/api/items/1")
-        ).andExpect(status().is3xxRedirection());
+        ).andExpect(status().isForbidden());
     }
 
     private AddItemDTO getValidAddItemDTO() {

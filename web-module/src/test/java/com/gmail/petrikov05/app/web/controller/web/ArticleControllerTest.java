@@ -28,10 +28,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationMessage.MESSAGE_ARTICLE_DATE_PUBLICATION_BEFORE;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationMessage.MESSAGE_SIZE_ARTICLE_TEXT;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationMessage.MESSAGE_SIZE_ARTICLE_TITLE;
 import static com.gmail.petrikov05.app.service.constant.validation.ArticleValidationMessage.MESSAGE_TITLE_NOT_EMPTY;
-import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_DATE_PUBLICATION_BEFORE;
 import static com.gmail.petrikov05.app.service.constant.validation.ValidationMessages.MESSAGE_NOT_EMPTY;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_ARTICLE_DELETED;
 import static com.gmail.petrikov05.app.web.constant.MessageConstant.MESSAGE_ARTICLE_DELETED_FAIL;
@@ -434,7 +434,7 @@ class ArticleControllerTest {
                         .param("title", VALID_ARTICLE_TITLE)
                         .param("text", VALID_ARTICLE_TEXT)
                         .param("datePublication", "1900-03-04T23:15")
-        ).andExpect(content().string(containsString(MESSAGE_DATE_PUBLICATION_BEFORE)));
+        ).andExpect(content().string(containsString(MESSAGE_ARTICLE_DATE_PUBLICATION_BEFORE)));
     }
 
     @Test
@@ -826,7 +826,7 @@ class ArticleControllerTest {
                 .param("datePublication", "2010-05-31T14:20")
         ).andExpect(status().isOk())
                 .andExpect(view().name("article_update"))
-                .andExpect(content().string(containsString(MESSAGE_DATE_PUBLICATION_BEFORE)));
+                .andExpect(content().string(containsString(MESSAGE_ARTICLE_DATE_PUBLICATION_BEFORE)));
     }
 
     @Test

@@ -14,5 +14,6 @@ public interface ArticleValidationMessage {
     String MESSAGE_SIZE_ARTICLE_TEXT =
             "Article text must be between " + SIZE_MIN_ARTICLE_TEXT + " and "
                     + SIZE_MAX_ARTICLE_TEXT + " characters.";
+    String MESSAGE_ARTICLE_DATE_PUBLICATION_BEFORE = "Date must be later than now.";
 
 }

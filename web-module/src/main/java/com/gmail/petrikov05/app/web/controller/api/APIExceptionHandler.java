@@ -6,16 +6,14 @@ import java.util.stream.Collectors;
 import com.gmail.petrikov05.app.service.exception.AnonymousUserException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice(basePackages = "com.gmail.petrikov05.app.web.controller.api")
+@RestControllerAdvice
 public class APIExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

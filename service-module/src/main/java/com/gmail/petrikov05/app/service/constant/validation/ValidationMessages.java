@@ -30,5 +30,4 @@ public interface ValidationMessages {
     String MESSAGE_SIZE_MAX_EMAIL = "Email must be no longer than " + SIZE_MAX_EMAIL + " characters.";
     String MESSAGE_SIZE_MAX_REVIEW_TEXT = "The review must be no longer than " + SIZE_MAX_REVIEW_TEXT + " characters.";
 
-    String MESSAGE_DATE_PUBLICATION_BEFORE = "Вate must be later than now.";
 }

@@ -93,6 +93,7 @@ public class ArticleAPIControllerITTest {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void deleteArticleById_returnMessage() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                 delete("/api/articles/1")

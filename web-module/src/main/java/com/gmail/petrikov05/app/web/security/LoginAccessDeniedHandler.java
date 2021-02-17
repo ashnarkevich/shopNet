@@ -1,4 +1,4 @@
-package com.gmail.petrikov05.app.web.controller.security;
+package com.gmail.petrikov05.app.web.security;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;

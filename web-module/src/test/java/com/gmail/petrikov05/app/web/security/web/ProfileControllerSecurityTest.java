@@ -1,4 +1,4 @@
-package com.gmail.petrikov05.app.web.controller.security.web;
+package com.gmail.petrikov05.app.web.security.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ class ProfileControllerSecurityTest {
 
     /* get "/profile" */
     @Test
-    public void getProfileLikeUnauthenticatedUser_returnStatusUnauthorized() throws Exception {
+    public void getProfileLikeUnauthenticatedUser_returnRedirectLogin() throws Exception {
         mockMvc.perform(get("/profile")
         ).andExpect(status().isUnauthorized());
     }
